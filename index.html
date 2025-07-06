@@ -1,54 +1,95 @@
+Got it! I’ll write you a full single-page HTML with:
+	•	All games having actual playable placeholder functions (interactive but simple logic)
+	•	User login with name input before playing
+	•	Admin tools with login, case creation, member management
+	•	Only admins can create cases or add members
+	•	Players can only join (login) by name, no backend, stored in localStorage/sessionStorage
+	•	Cases are stored in-memory (simulated), and you can add cases and members in admin panel
+	•	Medals limited to Bronze, Silver, Gold with rank system
+	•	Smooth, modern UI with animations and clear role restrictions
+	•	All in one file, no frameworks
+
+This will be a big code snippet, very detailed, so get comfy! Here’s the entire code:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MEDU Case Vault - Where Medicine Meets Mystery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MEDU Case Vault - Interactive Simulation</title>
 <style>
-  /* =====================
-     Variables and Themes
-  ===================== */
+  /* ========== CSS VARIABLES ========== */
   :root {
-    --blue: #1a2e4c;
-    --cyan: #00cfff;
-    --light-blue: #4dcfff;
-    --white: #e6f0fa;
-    --dark-bg: #0a1626;
-    --gray-dark: #2a3a50;
-    --gray-light: #7a8ba6;
-    --shadow-color: rgba(0, 195, 255, 0.3);
-    --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --radius: 12px;
-    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --blue: #0d3b66;
+    --cyan: #00fff7;
+    --light-blue: #4dd0e1;
+    --dark-blue: #031d33;
+    --bg-dark: #0b1a2b;
+    --bg-light: #f0f8ff;
+    --text-light: #e0f7fa;
+    --text-dark: #102a43;
+    --shadow-color: rgba(0, 255, 247, 0.6);
+    --radius: 10px;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-  [data-theme="dark"] {
-    --blue: #70e1ff;
-    --cyan: #00b7ff;
-    --light-blue: #4dcfff;
-    --white: #f5faff;
-    --dark-bg: #061521;
-    --gray-dark: #142a44;
-    --gray-light: #a8caff;
-    --shadow-color: rgba(0, 195, 255, 0.7);
+  [data-theme="light"] {
+    --bg-dark: var(--bg-light);
+    --text-light: var(--text-dark);
+    --shadow-color: rgba(0, 255, 247, 0.3);
   }
 
-  /* ==============
-     Reset + Base
-  ============== */
+  /* ========== RESET & BASE ========== */
   * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-  html {
-    scroll-behavior: smooth;
-    font-size: 16px;
+    box-sizing: border-box;
   }
   body {
-    background: var(--dark-bg);
-    color: var(--white);
-    font-family: var(--font-sans);
-    line-height: 1.5;
+    margin: 0; font-family: var(--font-family);
+    background: var(--bg-dark);
+    color: var(--text-light);
+    transition: background 0.4s ease, color 0.4s ease;
     min-height: 100vh;
-    transition: background var(--transition), color var(--transition);
+    display: flex;
+    flex-direction: column;
+  }
+  h1,h2,h3,h4 {
+    margin: 0 0 0.5rem 0;
+  }
+  p {
+    margin: 0.3rem 0 1rem 0;
+  }
+  button {
+    background: var(--cyan);
+    border: none;
+    padding: 0.6em 1.2em;
+    font-size: 1rem;
+    color: var(--dark-blue);
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: 0 0 6px var(--shadow-color);
+    transition: background 0.3s ease;
+  }
+  button:hover, button:focus {
+    background: var(--light-blue);
+    outline: none;
+  }
+  input, select, textarea {
+    font-family: var(--font-family);
+    padding: 0.5em;
+    font-size: 1rem;
+    border-radius: var(--radius);
+    border: 2px solid var(--cyan);
+    background: transparent;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    width: 100%;
+    transition: border-color 0.3s ease;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--light-blue);
+  }
+  textarea {
+    resize: vertical;
   }
   a {
     color: var(--cyan);
@@ -57,554 +98,83 @@
   a:hover, a:focus {
     text-decoration: underline;
   }
-  button {
-    cursor: pointer;
-    font-family: var(--font-sans);
-    background: var(--cyan);
-    border: none;
-    border-radius: var(--radius);
-    padding: 0.6em 1.4em;
-    font-weight: 600;
-    color: var(--dark-bg);
-    box-shadow: 0 0 10px var(--shadow-color);
-    transition: background-color var(--transition), box-shadow var(--transition), transform var(--transition);
-  }
-  button:hover, button:focus {
-    background-color: var(--light-blue);
-    box-shadow: 0 0 20px var(--shadow-color);
-    transform: translateY(-3px);
-    outline: none;
-  }
-  input, select, textarea {
-    border-radius: var(--radius);
-    border: none;
-    padding: 0.5em 0.8em;
-    font-size: 1rem;
-    width: 100%;
-    max-width: 400px;
-    margin-top: 0.3em;
-  }
-  input:focus, select:focus, textarea:focus {
-    outline: 2px solid var(--cyan);
-    outline-offset: 2px;
-  }
-  h1, h2, h3, h4 {
-    font-weight: 700;
-    text-shadow: 0 0 8px var(--shadow-color);
-  }
-  h1 { font-size: 3.2rem; margin-bottom: 0.2em; }
-  h2 { font-size: 2.4rem; margin-bottom: 0.8em; }
-  h3 { font-size: 1.6rem; margin-bottom: 0.5em; }
-  p {
-    font-size: 1.05rem;
-    color: var(--white);
-    margin-bottom: 1em;
+  main {
+    flex: 1;
+    max-width: 1080px;
+    margin: auto;
+    padding: 1rem;
   }
 
-  /* ==============
-     Layout
-  ============== */
+  /* ========== NAVIGATION ========== */
   nav {
-    position: sticky;
-    top: 0;
-    z-index: 10000;
     background: var(--blue);
-    padding: 1em 2em;
+    color: var(--text-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 15px var(--shadow-color);
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    box-shadow: 0 2px 10px rgba(0,255,247,0.25);
   }
   nav .logo {
-    font-weight: 900;
+    font-weight: 700;
     font-size: 1.5rem;
-    color: var(--white);
-    letter-spacing: 2px;
     user-select: none;
   }
   nav ul {
-    display: flex;
     list-style: none;
-    gap: 1.6em;
-    flex-wrap: wrap;
+    display: flex;
+    gap: 1rem;
   }
-  nav li {
-    user-select: none;
-  }
-  nav li.hidden {
-    display: none;
-  }
-  nav a {
+  nav ul li a {
+    color: var(--text-light);
     font-weight: 600;
-    color: var(--white);
-    padding: 0.4em 0.8em;
+    padding: 0.3rem 0.6rem;
     border-radius: var(--radius);
-    transition: background-color var(--transition);
-  }
-  nav a:hover, nav a:focus {
-    background-color: var(--cyan);
-    color: var(--dark-bg);
-    outline: none;
-  }
-  nav button#themeToggle {
-    background: transparent;
-    font-size: 1.7rem;
-    box-shadow: none;
-    color: var(--white);
-    padding: 0.2em 0.6em 0 0.6em;
-    border-radius: 50%;
-    transition: color var(--transition);
-  }
-  nav button#themeToggle:hover {
-    color: var(--cyan);
-  }
-
-  main {
-    max-width: 1200px;
-    margin: 2rem auto 6rem;
-    padding: 0 1.4rem;
-  }
-
-  /* ==============
-     HERO SECTION
-  ============== */
-  .hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 85vh;
-    background: linear-gradient(135deg, var(--blue), var(--cyan));
-    border-radius: var(--radius);
-    text-align: center;
-    box-shadow: 0 0 30px var(--shadow-color);
-    user-select: none;
-    position: relative;
-  }
-  .hero h1 {
-    font-size: 4.5rem;
-    margin-bottom: 0.3rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-  .hero p.subtitle {
-    font-weight: 600;
-    font-size: 1.3rem;
-    margin-bottom: 0.1rem;
-    opacity: 0.85;
-    font-style: italic;
-    letter-spacing: 0.8px;
-  }
-  .hero p.author {
-    font-size: 1rem;
-    opacity: 0.7;
-    margin-bottom: 2.2rem;
-  }
-  .hero button#enterVault {
-    font-size: 1.3rem;
-    padding: 1em 3em;
-    font-weight: 900;
-    box-shadow: 0 0 20px var(--shadow-color);
-    border: 2px solid var(--white);
-    color: var(--white);
-    background: transparent;
-    transition:
-      background-color 0.4s ease,
-      color 0.4s ease,
-      box-shadow 0.4s ease,
-      transform 0.3s ease;
-  }
-  .hero button#enterVault:hover,
-  .hero button#enterVault:focus {
-    background-color: var(--white);
-    color: var(--dark-bg);
-    box-shadow: 0 0 40px var(--shadow-color);
-    transform: translateY(-5px);
-    outline: none;
-  }
-
-  /* ==============
-     SECTIONS
-  ============== */
-  section {
-    margin-bottom: 4rem;
-    opacity: 0;
-    transform: translateY(20px);
-    animation-fill-mode: forwards;
-    animation-name: fadeInUp;
-    animation-duration: 0.7s;
-  }
-  section.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  section h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.6em;
-    margin-bottom: 1rem;
     user-select: none;
   }
-  section p.intro {
-    margin-bottom: 1.5rem;
-    font-size: 1.1rem;
-    opacity: 0.85;
-  }
-
-  /* ==============
-     GAMES GRID
-  ============== */
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: 2rem;
-  }
-  .game-card {
-    background: var(--gray-dark);
-    border-radius: var(--radius);
-    padding: 1.6rem 2rem;
-    box-shadow: 0 0 15px var(--shadow-color);
-    cursor: pointer;
-    color: var(--white);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition),
-      background-color var(--transition);
-    user-select: none;
-    outline-offset: 4px;
-  }
-  .game-card:focus,
-  .game-card:hover {
-    background-color: var(--blue);
-    box-shadow: 0 0 40px var(--shadow-color);
-    transform: translateY(-10px);
-    outline: none;
-  }
-  .game-card span.icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 0 3px var(--cyan));
-  }
-  .game-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-  .game-card p {
-    text-align: center;
-    font-size: 1rem;
-    opacity: 0.85;
-    line-height: 1.4;
-  }
-
-  /* ==============
-     SHADOW CASES LOCKER
-  ============== */
-  .locker {
-    background: var(--gray-dark);
-    border-radius: var(--radius);
-    padding: 3rem 2rem;
-    text-align: center;
-    font-size: 1.2rem;
-    font-style: italic;
-    color: var(--gray-light);
-    box-shadow: inset 0 0 20px var(--shadow-color);
-    user-select: none;
-  }
-
-  /* ==============
-     ANATOMY EXPLORER
-  ============== */
-  .anatomy-map {
-    margin: 0 auto;
-    max-width: 650px;
-    background: var(--gray-dark);
-    border-radius: var(--radius);
-    padding: 1.4rem;
-    box-shadow: 0 0 20px var(--shadow-color);
-    user-select: none;
-  }
-  .anatomy-map svg {
-    width: 100%;
-    height: auto;
-    cursor: pointer;
-  }
-  .organ {
-    fill: var(--blue);
-    transition: fill 0.3s ease;
-  }
-  .organ:hover, .organ:focus {
-    fill: var(--cyan);
-    outline: none;
-    filter: drop-shadow(0 0 10px var(--cyan));
-  }
-  .organ-label {
-    fill: var(--white);
-    font-size: 1rem;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  /* ==============
-     EVIDENCE SCANNER
-  ============== */
-  .scanner-box {
-    background: var(--gray-dark);
-    border: 2px dashed var(--cyan);
-    border-radius: var(--radius);
-    padding: 3rem;
-    text-align: center;
-    font-size: 1.4rem;
-    color: var(--cyan);
-    box-shadow: 0 0 30px var(--shadow-color);
-    user-select: none;
-    transition: background-color 0.4s ease, color 0.4s ease;
-  }
-  .scanner-box.dragover {
-    background-color: var(--cyan);
-    color: var(--dark-bg);
-  }
-  #scanResult {
-    margin-top: 1rem;
-    font-weight: 700;
-    min-height: 1.4rem;
-  }
-
-  /* ==============
-     CASE REPORT GENERATOR
-  ============== */
-  #reportArea > div {
-    background: var(--gray-dark);
-    padding: 1.5rem 2rem;
-    border-radius: var(--radius);
-    box-shadow: 0 0 25px var(--shadow-color);
-    margin-top: 1rem;
-    color: var(--white);
-    user-select: text;
-  }
-  #reportArea > div button {
-    margin-top: 1rem;
+  nav ul li a:hover, nav ul li a:focus {
     background: var(--cyan);
-    color: var(--dark-bg);
-    font-weight: 700;
-  }
-
-  /* ==============
-     LEADERBOARD TABLE
-  ============== */
-  .leaderboard {
-    overflow-x: auto;
-  }
-  .leaderboard table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--gray-dark);
-    box-shadow: 0 0 25px var(--shadow-color);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .leaderboard th, .leaderboard td {
-    padding: 1rem 1.4rem;
-    text-align: center;
-    color: var(--white);
-    user-select: none;
-  }
-  .leaderboard th {
-    background: var(--blue);
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-  .leaderboard tbody tr:nth-child(even) {
-    background: var(--gray-light);
-    color: var(--dark-bg);
-  }
-  .rank-bronze {
-    background: #cd7f32;
-    color: #fff;
-    font-weight: 700;
-  }
-  .rank-silver {
-    background: #c0c0c0;
-    color: #333;
-    font-weight: 700;
-  }
-  .rank-gold {
-    background: #ffd700;
-    color: #333;
-    font-weight: 700;
-  }
-  .rank-platinum {
-    background: #e5e4e2;
-    color: #333;
-    font-weight: 700;
-  }
-
-  /* ==============
-     ADMIN PANEL
-  ============== */
-  .admin-panel {
-    background: var(--gray-dark);
-    border-radius: var(--radius);
-    padding: 2rem;
-    box-shadow: 0 0 30px var(--shadow-color);
-    user-select: none;
-  }
-  .admin-panel form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.6rem 3rem;
-  }
-  .admin-panel label {
-    font-weight: 700;
-    display: block;
-    color: var(--cyan);
-  }
-  .admin-panel input, .admin-panel select {
-    margin-top: 0.4rem;
-    background: var(--dark-bg);
-    border: 2px solid var(--cyan);
-    color: var(--white);
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-  }
-  .admin-panel input:focus, .admin-panel select:focus {
-    border-color: var(--light-blue);
+    color: var(--dark-blue);
     outline: none;
   }
-  .admin-panel button {
-    grid-column: span 2;
-    margin-top: 1.2rem;
-  }
-
-  /* ==============
-     TIMELINE / ARCHIVES
-  ============== */
-  .timeline {
-    border-left: 4px solid var(--cyan);
-    margin-left: 1rem;
-    padding-left: 1.5rem;
-  }
-  .entry {
-    position: relative;
-    margin-bottom: 2rem;
-  }
-  .entry::before {
-    content: '';
-    position: absolute;
-    left: -13px;
-    top: 8px;
-    width: 20px;
-    height: 20px;
-    background: var(--cyan);
-    border-radius: 50%;
-    box-shadow: 0 0 15px var(--shadow-color);
-  }
-  .entry h4 {
-    margin-bottom: 0.6rem;
-    user-select: none;
-  }
-  .entry p {
-    font-size: 1rem;
-    opacity: 0.85;
-  }
-
-  /* ==============
-     MODAL
-  ============== */
-  .modal-bg {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 9999;
-  }
-  .modal-bg.active {
-    visibility: visible;
-    opacity: 1;
-  }
-  .modal {
-    background: var(--gray-dark);
-    border-radius: var(--radius);
-    max-width: 500px;
-    width: 90%;
-    padding: 2rem;
-    box-shadow: 0 0 40px var(--shadow-color);
-    color: var(--white);
-    position: relative;
-    user-select: text;
-  }
-  .modal h3 {
-    margin-bottom: 1rem;
-  }
-  .modal p {
-    margin-bottom: 1.2rem;
-    font-size: 1.1rem;
-    line-height: 1.4;
-  }
-  .modal button.close-modal {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+  nav button#themeToggle, nav button#menuToggle {
     background: transparent;
     border: none;
-    font-size: 1.7rem;
-    color: var(--cyan);
+    font-size: 1.5rem;
+    color: var(--text-light);
     cursor: pointer;
+    user-select: none;
+    padding: 0 0.5rem;
   }
-  .modal button.close-modal:hover {
-    color: var(--light-blue);
+  nav button#themeToggle:hover, nav button#menuToggle:hover,
+  nav button#themeToggle:focus, nav button#menuToggle:focus {
+    color: var(--cyan);
+    outline: none;
   }
-
-  /* ==============
-     RESPONSIVE
-  ============== */
+  /* Mobile nav toggle */
   @media (max-width: 768px) {
     nav ul {
       display: none;
-    }
-    nav ul.open {
-      display: flex;
       flex-direction: column;
-      gap: 1.2em;
+      background: var(--blue);
       position: fixed;
       top: 60px;
       right: 0;
-      background: var(--blue);
       width: 220px;
-      padding: 1.5rem;
       border-radius: 0 0 0 var(--radius);
       box-shadow: 0 0 15px var(--shadow-color);
-      z-index: 20000;
+      padding: 1rem;
+      height: calc(100% - 60px);
+      overflow-y: auto;
+    }
+    nav ul.open {
+      display: flex;
     }
     nav button#menuToggle {
       display: inline-block;
-      background: transparent;
-      font-size: 1.9rem;
-      border: none;
-      color: var(--white);
-      cursor: pointer;
-      padding: 0.2em 0.6em 0 0.6em;
-      border-radius: 50%;
-      box-shadow: none;
-      user-select: none;
-    }
-    nav button#menuToggle:hover {
-      color: var(--cyan);
     }
   }
   @media (min-width: 769px) {
@@ -612,496 +182,1147 @@
       display: none;
     }
   }
+
+  /* ========== HERO ========== */
+  .hero {
+    text-align: center;
+    margin: 3rem 0 2rem 0;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px var(--cyan);
+  }
+  .hero p.subtitle {
+    font-style: italic;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--light-blue);
+  }
+  .hero p.author {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  .hero button#enterVault {
+    font-size: 1.3rem;
+    padding: 1em 2em;
+    font-weight: 700;
+    box-shadow: 0 0 15px var(--cyan);
+  }
+
+  /* ========== SECTIONS ========== */
+  section {
+    margin-bottom: 3rem;
+    padding: 1rem;
+    background: var(--dark-blue);
+    border-radius: var(--radius);
+    box-shadow: 0 0 10px var(--shadow-color);
+    transition: transform 0.3s ease, opacity 0.4s ease;
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  section h2 {
+    font-size: 2rem;
+    border-bottom: 2px solid var(--cyan);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    user-select: none;
+  }
+  .intro {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  /* ========== GAME CARDS ========== */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 1.25rem;
+  }
+  .game-card {
+    background: var(--blue);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: 0 0 10px var(--shadow-color);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.25s ease, transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .game-card:hover, .game-card:focus {
+    background: var(--cyan);
+    color: var(--dark-blue);
+    outline: none;
+    transform: scale(1.05);
+  }
+  .game-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    user-select: none;
+  }
+  .game-card h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  /* ========== MODAL ========== */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10000;
+  }
+  .modal-bg.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal {
+    background: var(--dark-blue);
+    padding: 2rem;
+    border-radius: var(--radius);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 20px var(--cyan);
+    position: relative;
+    user-select: text;
+  }
+  .modal button.close-modal {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--cyan);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+  }
+  .modal button.close-modal:hover, .modal button.close-modal:focus {
+    color: var(--light-blue);
+    outline: none;
+  }
+
+  /* ========== ANATOMY EXPLORER ========== */
+  .anatomy-map {
+    text-align: center;
+  }
+  .anatomy-map svg {
+    max-width: 350px;
+    height: auto;
+    user-select: none;
+    filter: drop-shadow(0 0 6px var(--cyan));
+  }
+  .organ {
+    fill: var(--cyan);
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    stroke: var(--light-blue);
+    stroke-width: 2px;
+  }
+  .organ:hover, .organ:focus {
+    opacity: 1;
+    outline: none;
+  }
+
+  /* ========== SCANNER ========== */
+  #scannerBox {
+    border: 2px dashed var(--cyan);
+    border-radius: var(--radius);
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    user-select: none;
+    color: var(--cyan);
+    position: relative;
+  }
+  #scannerBox.dragover {
+    background: var(--cyan);
+    color: var(--dark-blue);
+  }
+
+  /* ========== CASE REPORT GENERATOR ========== */
+  form label {
+    font-weight: 700;
+  }
+  #reportArea {
+    margin-top: 1rem;
+    background: var(--blue);
+    padding: 1rem;
+    border-radius: var(--radius);
+    box-shadow: 0 0 15px var(--shadow-color);
+  }
+  #reportArea h3 {
+    margin-top: 0;
+  }
+  #reportArea button#printReport {
+    margin-top: 1rem;
+  }
+
+  /* ========== LEADERBOARD ========== */
+  .leaderboard table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .leaderboard th, .leaderboard td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--cyan);
+  }
+  .leaderboard tbody tr:hover {
+    background: var(--cyan);
+    color: var(--dark-blue);
+    cursor: default;
+  }
+  .rank-bronze {
+    color: #cd7f32;
+    font-weight: 700;
+  }
+  .rank-silver {
+    color: #c0c0c0;
+    font-weight: 700;
+  }
+  .rank-gold {
+    color: #ffd700;
+    font-weight: 700;
+  }
+
+  /* ========== ADMIN PANEL ========== */
+  #admin {
+    background: #06172d;
+  }
+  #admin .admin-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  #admin form {
+    background: var(--blue);
+    padding: 1rem;
+    border-radius: var(--radius);
+    box-shadow: 0 0 10px var(--shadow-color);
+    flex: 1 1 300px;
+    min-width: 280px;
+  }
+  #admin form button {
+    width: 100%;
+  }
+  #adminMsg {
+    flex-basis: 100%;
+    font-weight: 700;
+    text-align: center;
+  }
+  #adminMembersList {
+    background: var(--blue);
+    padding: 1rem;
+    border-radius: var(--radius);
+    box-shadow: 0 0 10px var(--shadow-color);
+    flex: 1 1 300px;
+    min-width: 280px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  #adminMembersList h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  #adminMembersList ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #adminMembersList li {
+    margin: 0.2rem 0;
+    padding: 0.4rem 0.6rem;
+    background: var(--dark-blue);
+    border-radius: var(--radius);
+  }
+  /* ========== LOGIN MODAL ========== */
+  #loginModal .modal {
+    max-width: 400px;
+  }
+  #loginModal label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  #loginModal input[type="text"] {
+    width: 100%;
+  }
+
+  /* ========== GAME SECTIONS ========== */
+  .game-section {
+    display: none;
+  }
+  .game-section.active {
+    display: block;
+  }
+
+  /* ========== MESSAGES ========== */
+  .message {
+    margin-top: 0.5rem;
+    font-weight: 700;
+    color: var(--cyan);
+  }
 </style>
 </head>
 <body data-theme="dark">
+
 <nav>
-  <div class="logo" tabindex="0" aria-label="MEDU Case Vault Logo">MEDU Case Vault</div>
+  <div class="logo" tabindex="0">MEDU Case Vault</div>
   <ul id="navMenu" role="menubar" aria-label="Main Navigation">
-    <li role="none"><a href="#games" role="menuitem" tabindex="0">Games</a></li>
-    <li role="none"><a href="#anatomy" role="menuitem" tabindex="-1">Anatomy Explorer</a></li>
-    <li role="none"><a href="#scanner" role="menuitem" tabindex="-1">Evidence Scanner</a></li>
-    <li role="none"><a href="#report" role="menuitem" tabindex="-1">Case Reports</a></li>
-    <li role="none"><a href="#leaderboard" role="menuitem" tabindex="-1">Leaderboard</a></li>
-    <li role="none"><a href="#admin" role="menuitem" tabindex="-1">Admin Panel</a></li>
+    <li><a href="#hero" tabindex="0" id="nav-home">Home</a></li>
+    <li><a href="#games" tabindex="-1" id="nav-games">Games</a></li>
+    <li><a href="#anatomy" tabindex="-1" id="nav-anatomy">Anatomy Explorer</a></li>
+    <li><a href="#scanner" tabindex="-1" id="nav-scanner">Evidence Scanner</a></li>
+    <li><a href="#report" tabindex="-1" id="nav-report">Case Reports</a></li>
+    <li><a href="#leaderboard" tabindex="-1" id="nav-leaderboard">Leaderboard</a></li>
+    <li><a href="#admin" tabindex="-1" id="nav-admin" class="hidden" aria-hidden="true">Admin Tools</a></li>
   </ul>
   <button id="themeToggle" aria-label="Toggle Dark/Light Mode" title="Toggle Dark/Light Mode">🌗</button>
   <button id="menuToggle" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu">☰</button>
 </nav>
 
 <main>
-  <section class="hero" aria-label="Welcome Banner">
+
+  <!-- HERO -->
+  <section class="hero visible" id="hero" tabindex="0" aria-label="Welcome Banner">
     <h1>MEDU Case Vault</h1>
     <p class="subtitle">Where Medicine Meets Mystery</p>
-    <p class="author">Unlock your inner diagnostician</p>
-    <button id="enterVault" aria-haspopup="true" aria-controls="games" aria-label="Enter the Case Vault">Enter Vault</button>
+    <p class="author">By Luna.C.Everly | Medical Education Overseer</p>
+    <button id="enterVault" aria-label="Enter the case vault">Enter Vault</button>
   </section>
 
-  <section id="games" tabindex="0" aria-label="Games Section" aria-live="polite" aria-relevant="additions">
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="loginTitle" tabindex="-1">
+    <div class="modal" role="document" aria-describedby="loginDesc">
+      <button class="close-modal" aria-label="Close login modal">×</button>
+      <h3 id="loginTitle">Player Login</h3>
+      <p id="loginDesc">Please enter your player name to continue.</p>
+      <form id="loginForm">
+        <label for="playerNameInput">Player Name:</label>
+        <input type="text" id="playerNameInput" name="playerNameInput" autocomplete="off" minlength="2" maxlength="20" required placeholder="e.g. Dr. Jane" />
+        <button type="submit">Enter</button>
+      </form>
+      <p id="loginError" class="message" aria-live="assertive"></p>
+    </div>
+  </div>
+
+  <!-- GAMES -->
+  <section id="games" tabindex="0" aria-label="Games Section">
     <h2>🔬 MEDU Games Collection</h2>
     <p class="intro">Choose a game mode below to train your medical skills and challenge your mind.</p>
-    <div class="games-grid" role="list">
-      <div class="game-card" role="listitem" tabindex="0" data-game="diagnosis-duel" aria-label="Diagnosis Duel Game">
-        <span class="icon" aria-hidden="true">🧠</span>
+    <div class="games-grid">
+      <div class="game-card" data-game="diagnosis-duel" tabindex="0" role="button" aria-pressed="false" aria-label="Play Diagnosis Duel Game">
+        <div class="icon">🧠</div>
         <h3>Diagnosis Duel</h3>
-        <p>1v1 competitive case-solving battle. Solve fast, solve right, climb ranks from Bronze to Platinum Medic.</p>
+        <p>1v1 Competitive clinical case solving challenge.</p>
       </div>
-      <div class="game-card" role="listitem" tabindex="0" data-game="er-escape" aria-label="ER Escape Room Game">
-        <span class="icon" aria-hidden="true">🚨</span>
+      <div class="game-card" data-game="er-escape" tabindex="0" role="button" aria-pressed="false" aria-label="Play ER Escape Room Game">
+        <div class="icon">🚨</div>
         <h3>ER Escape Room</h3>
-        <p>Navigate emergency scenarios against time. Can you escape the chaos?</p>
+        <p>Navigate emergency scenarios and escape under pressure.</p>
       </div>
-      <div class="game-card" role="listitem" tabindex="0" data-game="anatomy-puzzle" aria-label="Anatomy Puzzle Game">
-        <span class="icon" aria-hidden="true">🧩</span>
-        <h3>Anatomy Puzzle</h3>
-        <p>Piece together organ systems and master human anatomy through interactive puzzles.</p>
+      <div class="game-card" data-game="anatomy-puzzle" tabindex="0" role="button" aria-pressed="false" aria-label="Play Anatomy Puzzle Match">
+        <div class="icon">🧪</div>
+        <h3>Anatomy Puzzle Match</h3>
+        <p>Match organs and systems in timed puzzles.</p>
       </div>
-      <div class="game-card" role="listitem" tabindex="0" data-game="case-creator" aria-label="Case Creator Tool">
-        <span class="icon" aria-hidden="true">✍️</span>
+      <div class="game-card" data-game="case-creator" tabindex="0" role="button" aria-pressed="false" aria-label="Play Case Creator Game">
+        <div class="icon">📄</div>
         <h3>Case Creator</h3>
-        <p>Build and share your own medical mystery cases with custom branching logic and clues.</p>
+        <p>Create your own clinical cases for others to solve.</p>
       </div>
     </div>
   </section>
 
+  <!-- GAME PLAY SECTIONS -->
+  <!-- Diagnosis Duel -->
+  <section id="diagnosis-duel" class="game-section" tabindex="0" aria-label="Diagnosis Duel Game">
+    <h2>🧠 Diagnosis Duel</h2>
+    <p>Play head-to-head clinical case solving. (Single player simulation)</p>
+    <div id="duelArea"></div>
+    <button id="duelQuitBtn">Quit Game</button>
+  </section>
+
+  <!-- ER Escape Room -->
+  <section id="er-escape" class="game-section" tabindex="0" aria-label="ER Escape Room Game">
+    <h2>🚨 ER Escape Room</h2>
+    <p>Navigate the emergency room and solve challenges to escape.</p>
+    <div id="erRoomArea"></div>
+    <button id="erQuitBtn">Quit Game</button>
+  </section>
+
+  <!-- Anatomy Puzzle Match -->
+  <section id="anatomy-puzzle" class="game-section" tabindex="0" aria-label="Anatomy Puzzle Match Game">
+    <h2>🧪 Anatomy Puzzle Match</h2>
+    <p>Match the correct organs and body systems to score points.</p>
+    <div id="anatomyPuzzleArea"></div>
+    <button id="anatomyQuitBtn">Quit Game</button>
+  </section>
+
+  <!-- Case Creator -->
+  <section id="case-creator" class="game-section" tabindex="0" aria-label="Case Creator Game">
+    <h2>📄 Case Creator</h2>
+    <p>Create clinical cases for others to solve. Admin only.</p>
+    <div id="caseCreatorArea"></div>
+    <button id="caseCreatorQuitBtn">Quit Game</button>
+  </section>
+
+  <!-- ANATOMY EXPLORER -->
   <section id="anatomy" tabindex="0" aria-label="Anatomy Explorer Section">
     <h2>🫀 Anatomy Explorer</h2>
-    <p class="intro">Click on an organ to learn detailed medical information and clinical correlations.</p>
-    <div class="anatomy-map" role="img" aria-label="Diagram of human torso organs">
-      <svg viewBox="0 0 500 700" role="presentation" aria-hidden="true" tabindex="-1" >
-        <!-- Outline body -->
-        <rect x="100" y="20" width="300" height="660" rx="50" ry="50" fill="#1f3350" />
-        <!-- Organs -->
-        <circle class="organ" id="heart" tabindex="0" cx="250" cy="200" r="45" aria-label="Heart, click for info" />
-        <ellipse class="organ" id="lungs" tabindex="0" cx="250" cy="350" rx="80" ry="120" aria-label="Lungs, click for info" />
-        <ellipse class="organ" id="liver" tabindex="0" cx="330" cy="520" rx="130" ry="70" aria-label="Liver, click for info" />
-        <ellipse class="organ" id="stomach" tabindex="0" cx="170" cy="510" rx="90" ry="60" aria-label="Stomach, click for info" />
-        <ellipse class="organ" id="brain" tabindex="0" cx="250" cy="80" rx="70" ry="50" aria-label="Brain, click for info" />
+    <p>Hover or click organs for detailed info and case links.</p>
+    <div class="anatomy-map" role="img" aria-label="Human Anatomy Map">
+      <svg viewBox="0 0 300 400" role="img" aria-labelledby="anatomyTitle" tabindex="0" >
+        <title id="anatomyTitle">Human Anatomy Simplified Map</title>
+        <!-- Organs as clickable paths -->
+        <rect x="120" y="50" width="60" height="90" class="organ" id="heart" tabindex="0" aria-label="Heart organ" />
+        <rect x="110" y="150" width="80" height="100" class="organ" id="lungs" tabindex="0" aria-label="Lungs organ" />
+        <rect x="130" y="260" width="40" height="70" class="organ" id="liver" tabindex="0" aria-label="Liver organ" />
       </svg>
     </div>
   </section>
 
+  <!-- EVIDENCE SCANNER -->
   <section id="scanner" tabindex="0" aria-label="Evidence Scanner Section">
-    <h2>🔎 Evidence Scanner</h2>
-    <p class="intro">Drag and drop medical images, reports, or clues below to analyze evidence.</p>
-    <div class="scanner-box" id="scannerBox" tabindex="0" aria-dropeffect="copy" aria-label="Drop files here to scan">
-      Drop files here or click to upload
-      <input type="file" id="fileInput" accept="image/*,.pdf,.txt" style="display:none;" multiple />
-    </div>
-    <div id="scanResult" aria-live="polite" aria-atomic="true"></div>
+    <h2>🧾 Evidence Scanner</h2>
+    <p>Drag and drop medical files here or click to upload for scanning simulation.</p>
+    <div id="scannerBox" tabindex="0" aria-label="File drag and drop zone">Drop files here or click to upload</div>
+    <input type="file" id="fileInput" multiple hidden aria-hidden="true" />
+    <p id="scanResult" role="alert" aria-live="polite"></p>
   </section>
 
+  <!-- CASE REPORT GENERATOR -->
   <section id="report" tabindex="0" aria-label="Case Report Generator Section">
     <h2>📋 Case Report Generator</h2>
-    <p class="intro">Generate detailed reports for your cases and print or share your findings.</p>
-    <form id="reportForm" aria-label="Case report generation form">
+    <form id="reportForm" aria-describedby="reportHelp">
       <label for="patientName">Patient Name:</label>
-      <input type="text" id="patientName" name="patientName" required autocomplete="off" placeholder="John Doe" />
-      <label for="caseSummary">Summary:</label>
-      <textarea id="caseSummary" name="caseSummary" rows="4" required placeholder="Brief case description..."></textarea>
+      <input id="patientName" name="patientName" type="text" required placeholder="John Doe" autocomplete="off" />
+      <label for="caseSummary">Case Summary:</label>
+      <textarea id="caseSummary" name="caseSummary" rows="3" required placeholder="Brief summary"></textarea>
       <label for="diagnosis">Diagnosis:</label>
-      <input type="text" id="diagnosis" name="diagnosis" required autocomplete="off" placeholder="Diagnosis here" />
+      <textarea id="diagnosis" name="diagnosis" rows="2" required placeholder="Final diagnosis"></textarea>
       <label for="recommendations">Recommendations:</label>
-      <textarea id="recommendations" name="recommendations" rows="3" placeholder="Treatment and advice..."></textarea>
+      <textarea id="recommendations" name="recommendations" rows="2" placeholder="Optional"></textarea>
       <button type="submit">Generate Report</button>
     </form>
     <div id="reportArea" aria-live="polite"></div>
   </section>
 
-  <section id="leaderboard" tabindex="0" aria-label="Leaderboard Section">
-    <h2>🏆 Leaderboard</h2>
-    <p class="intro">Track the top players across all game modes and their ranks.</p>
-    <div class="leaderboard" role="table" aria-label="Leaderboard table">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Rank</th>
-            <th scope="col">Player</th>
-            <th scope="col">Game Mode</th>
-            <th scope="col">Score</th>
-            <th scope="col">Level</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody">
-          <!-- Dynamic leaderboard rows here -->
-        </tbody>
-      </table>
-    </div>
+  <!-- LEADERBOARD -->
+  <section id="leaderboard" tabindex="0" aria-label="Leaderboard Section" class="leaderboard">
+    <h2>🏅 Leaderboard</h2>
+    <table aria-describedby="leaderboardDesc">
+      <caption id="leaderboardDesc">Top players ranked by completed cases and medals.</caption>
+      <thead>
+        <tr><th>Rank</th><th>Player</th><th>Game</th><th>Score</th><th>Medals</th></tr>
+      </thead>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
   </section>
 
-  <section id="admin" tabindex="0" aria-label="Admin Panel Section">
-    <h2>🛠️ Admin Panel</h2>
-    <p class="intro">Create new cases and manage game content (simulated, no backend).</p>
-    <div class="admin-panel" role="region" aria-live="polite" aria-atomic="true">
-      <form id="caseForm">
-        <label for="caseName">Case Name</label>
-        <input type="text" id="caseName" name="caseName" required autocomplete="off" placeholder="Enter case title" />
-        <label for="caseDesc">Description</label>
-        <textarea id="caseDesc" name="caseDesc" rows="3" required placeholder="Brief case summary"></textarea>
-        <label for="caseType">Case Type</label>
-        <select id="caseType" name="caseType" required>
-          <option value="" disabled selected>Select type</option>
+  <!-- ADMIN TOOLS -->
+  <section id="admin" tabindex="0" aria-label="Admin Tools Section" class="hidden">
+    <h2>⚙️ Admin Tools</h2>
+    <div class="admin-panel">
+
+      <!-- Admin Login -->
+      <form id="adminLoginForm" aria-describedby="adminLoginMsg">
+        <h3>Admin Login</h3>
+        <label for="adminPassword">Password:</label>
+        <input type="password" id="adminPassword" required placeholder="Enter admin password" autocomplete="off" />
+        <button type="submit">Login</button>
+        <p id="adminLoginMsg" class="message" aria-live="assertive"></p>
+      </form>
+
+      <!-- Create Case -->
+      <form id="caseForm" aria-describedby="caseFormMsg" class="hidden">
+        <h3>Create New Case</h3>
+        <label for="caseName">Case Name:</label>
+        <input type="text" id="caseName" required placeholder="Case title" autocomplete="off" />
+        <label for="caseDesc">Case Description:</label>
+        <textarea id="caseDesc" rows="3" required placeholder="Brief description"></textarea>
+        <label for="caseGame">Game Type:</label>
+        <select id="caseGame" required>
+          <option value="" disabled selected>Select game</option>
           <option value="diagnosis-duel">Diagnosis Duel</option>
           <option value="er-escape">ER Escape Room</option>
-          <option value="anatomy-puzzle">Anatomy Puzzle</option>
+          <option value="anatomy-puzzle">Anatomy Puzzle Match</option>
           <option value="case-creator">Case Creator</option>
         </select>
         <button type="submit">Add Case</button>
+        <p id="caseFormMsg" class="message"></p>
       </form>
-      <div id="adminMsg" aria-live="polite" style="margin-top:1rem;"></div>
+
+      <!-- Manage Members -->
+      <form id="memberForm" aria-describedby="memberFormMsg" class="hidden">
+        <h3>Add Member</h3>
+        <label for="memberName">Member Name:</label>
+        <input type="text" id="memberName" required placeholder="New member's name" autocomplete="off" />
+        <label for="memberMedal">Medal:</label>
+        <select id="memberMedal" required>
+          <option value="" disabled selected>Select medal</option>
+          <option value="Bronze">Bronze</option>
+          <option value="Silver">Silver</option>
+          <option value="Gold">Gold</option>
+        </select>
+        <button type="submit">Add Member</button>
+        <p id="memberFormMsg" class="message"></p>
+      </form>
+
+      <!-- Member List -->
+      <div id="adminMembersList" aria-live="polite">
+        <h3>Members List</h3>
+        <ul id="membersList"></ul>
+      </div>
+
     </div>
   </section>
 
-  <!-- MODAL -->
-  <div id="modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
-    <div class="modal" role="document">
-      <button class="close-modal" aria-label="Close modal">×</button>
-      <h3 id="modalTitle"></h3>
-      <p id="modalContent"></p>
-    </div>
-  </div>
 </main>
 
+<!-- MODAL FOR DETAILS -->
+<div id="detailModal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle" tabindex="-1">
+  <div class="modal" role="document">
+    <button class="close-modal" aria-label="Close detail modal">×</button>
+    <h3 id="detailModalTitle">Detail</h3>
+    <div id="detailModalContent"></div>
+  </div>
+</div>
+
 <script>
-  (() => {
-    'use strict';
+(() => {
+  "use strict";
 
-    // Helper functions
-    function select(selector, all = false) {
-      return all ? [...document.querySelectorAll(selector)] : document.querySelector(selector);
-    }
-    function animateSection(section) {
-      section.classList.add('visible');
-    }
+  // Utility selectors
+  const select = s => document.querySelector(s);
+  const selectAll = s => document.querySelectorAll(s);
 
-    // Animate sections on scroll
-    function handleScrollAnimation() {
-      const sections = select('section', true);
-      const triggerBottom = window.innerHeight * 0.85;
-      sections.forEach(section => {
-        const sectionTop = section.getBoundingClientRect().top;
-        if (sectionTop < triggerBottom) {
-          animateSection(section);
-        }
+  // STATE
+  let currentPlayer = null;
+  let isAdmin = false;
+  let casesDB = []; // Cases array {id, name, description, game}
+  let membersDB = []; // Members array {name, medal}
+  let leaderboardDB = []; // Player scores {player, game, score, medals}
+
+  // Store keys for localStorage
+  const LS_KEYS = {
+    players: 'medu_players',
+    cases: 'medu_cases',
+    members: 'medu_members',
+    leaderboard: 'medu_leaderboard',
+    admin: 'medu_admin',
+    currentPlayer: 'medu_currentPlayer',
+  };
+
+  // === INIT STORAGE ===
+  function loadStorage(){
+    const savedCases = localStorage.getItem(LS_KEYS.cases);
+    const savedMembers = localStorage.getItem(LS_KEYS.members);
+    const savedLeaderboard = localStorage.getItem(LS_KEYS.leaderboard);
+    const savedAdmin = localStorage.getItem(LS_KEYS.admin);
+    const savedPlayer = localStorage.getItem(LS_KEYS.currentPlayer);
+
+    casesDB = savedCases ? JSON.parse(savedCases) : [];
+    membersDB = savedMembers ? JSON.parse(savedMembers) : [];
+    leaderboardDB = savedLeaderboard ? JSON.parse(savedLeaderboard) : [];
+    isAdmin = savedAdmin === 'true';
+    currentPlayer = savedPlayer ? JSON.parse(savedPlayer) : null;
+  }
+
+  function saveStorage(){
+    localStorage.setItem(LS_KEYS.cases, JSON.stringify(casesDB));
+    localStorage.setItem(LS_KEYS.members, JSON.stringify(membersDB));
+    localStorage.setItem(LS_KEYS.leaderboard, JSON.stringify(leaderboardDB));
+    localStorage.setItem(LS_KEYS.admin, isAdmin.toString());
+    localStorage.setItem(LS_KEYS.currentPlayer, JSON.stringify(currentPlayer));
+  }
+
+  // === NAVIGATION ===
+  const navMenu = select('#navMenu');
+  const menuToggle = select('#menuToggle');
+  const themeToggle = select('#themeToggle');
+  const loginModal = select('#loginModal');
+  const loginForm = select('#loginForm');
+  const loginError = select('#loginError');
+  const enterVaultBtn = select('#enterVault');
+  const navAdmin = select('#nav-admin');
+  const adminSection = select('#admin');
+
+  // Mobile nav toggle
+  menuToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('open');
+  });
+
+  // Theme toggle
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.body.getAttribute('data-theme');
+    if(currentTheme === 'dark'){
+      document.body.setAttribute('data-theme', 'light');
+      themeToggle.textContent = '🌙';
+    } else {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '🌗';
+    }
+  });
+
+  // Show login modal on enter vault
+  enterVaultBtn.addEventListener('click', () => {
+    showLoginModal();
+  });
+
+  // Show login modal function
+  function showLoginModal(){
+    loginModal.classList.add('active');
+    loginModal.setAttribute('aria-hidden', 'false');
+    loginModal.querySelector('input').focus();
+  }
+  // Hide login modal
+  function hideLoginModal(){
+    loginModal.classList.remove('active');
+    loginModal.setAttribute('aria-hidden', 'true');
+    loginError.textContent = '';
+  }
+
+  // Login form submit
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = loginForm.playerNameInput.value.trim();
+    if(name.length < 2){
+      loginError.textContent = 'Please enter at least 2 characters.';
+      return;
+    }
+    currentPlayer = { name, medal: 'Bronze', score: 0 };
+    // Save player info in leaderboard if new
+    let found = leaderboardDB.find(p => p.player === name);
+    if(!found){
+      leaderboardDB.push({player: name, game: 'N/A', score: 0, medals: ['Bronze']});
+      saveStorage();
+    }
+    hideLoginModal();
+    updateUIForPlayer();
+  });
+
+  // Update UI after login
+  function updateUIForPlayer(){
+    // Enable game nav links
+    selectAll('#navMenu a').forEach(link => link.setAttribute('tabindex', '0'));
+    // Show welcome message and games
+    alert(`Welcome, ${currentPlayer.name}! You have Bronze medal.`);
+    scrollToSection('games');
+  }
+
+  // Scroll to section helper
+  function scrollToSection(id){
+    const el = select(`#${id}`);
+    if(el){
+      el.scrollIntoView({behavior:'smooth'});
+      el.focus();
+    }
+  }
+
+  // Show Admin if logged in
+  function updateAdminUI(){
+    if(isAdmin){
+      navAdmin.classList.remove('hidden');
+      navAdmin.setAttribute('aria-hidden', 'false');
+      adminSection.classList.remove('hidden');
+      // Show admin forms
+      select('#caseForm').classList.remove('hidden');
+      select('#memberForm').classList.remove('hidden');
+      select('#adminLoginForm').classList.add('hidden');
+      renderMembers();
+    } else {
+      navAdmin.classList.add('hidden');
+      navAdmin.setAttribute('aria-hidden', 'true');
+      adminSection.classList.add('hidden');
+      select('#caseForm').classList.add('hidden');
+      select('#memberForm').classList.add('hidden');
+      select('#adminLoginForm').classList.remove('hidden');
+    }
+  }
+
+  // Admin login form
+  const adminLoginForm = select('#adminLoginForm');
+  const adminLoginMsg = select('#adminLoginMsg');
+
+  adminLoginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const pw = adminLoginForm.adminPassword.value;
+    if(pw === 'meduadmin123'){ // Simple password, for demo
+      isAdmin = true;
+      saveStorage();
+      updateAdminUI();
+      adminLoginMsg.textContent = 'Admin login successful!';
+      adminLoginMsg.style.color = '#00ffea';
+      adminLoginForm.reset();
+    } else {
+      adminLoginMsg.textContent = 'Incorrect password.';
+      adminLoginMsg.style.color = '#ff6b6b';
+    }
+  });
+
+  // Add case form
+  const caseForm = select('#caseForm');
+  const caseFormMsg = select('#caseFormMsg');
+  caseForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if(!isAdmin) return;
+    const name = caseForm.caseName.value.trim();
+    const desc = caseForm.caseDesc.value.trim();
+    const game = caseForm.caseGame.value;
+    if(!name || !desc || !game){
+      caseFormMsg.textContent = 'Please fill all fields.';
+      caseFormMsg.style.color = '#ff6b6b';
+      return;
+    }
+    // Create unique ID
+    const id = Date.now().toString();
+    casesDB.push({id, name, description: desc, game});
+    saveStorage();
+    caseFormMsg.textContent = `Case "${name}" added to ${game.replace(/-/g,' ')}.`;
+    caseFormMsg.style.color = '#00ffea';
+    caseForm.reset();
+    renderCasesInGames();
+  });
+
+  // Add member form
+  const memberForm = select('#memberForm');
+  const memberFormMsg = select('#memberFormMsg');
+  memberForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if(!isAdmin) return;
+    const name = memberForm.memberName.value.trim();
+    const medal = memberForm.memberMedal.value;
+    if(!name || !medal){
+      memberFormMsg.textContent = 'Please fill all fields.';
+      memberFormMsg.style.color = '#ff6b6b';
+      return;
+    }
+    membersDB.push({name, medal});
+    saveStorage();
+    memberFormMsg.textContent = `Member "${name}" with ${medal} medal added.`;
+    memberFormMsg.style.color = '#00ffea';
+    memberForm.reset();
+    renderMembers();
+  });
+
+  // Render member list
+  const membersList = select('#membersList');
+  function renderMembers(){
+    if(!membersDB.length){
+      membersList.innerHTML = '<li>No members added yet.</li>';
+      return;
+    }
+    membersList.innerHTML = '';
+    membersDB.forEach(m => {
+      const li = document.createElement('li');
+      li.textContent = `${m.name} — ${m.medal} Medal`;
+      membersList.appendChild(li);
+    });
+  }
+
+  // Render cases in games lists
+  // We will show case names on each game screen
+  function renderCasesInGames(){
+    // Diagnosis Duel
+    const duelArea = select('#duelArea');
+    // Filter cases for diagnosis-duel
+    const duelCases = casesDB.filter(c => c.game === 'diagnosis-duel');
+    if(!duelCases.length){
+      duelArea.innerHTML = '<p>No Diagnosis Duel cases available. Admins can add cases in Admin Tools.</p>';
+    } else {
+      duelArea.innerHTML = '';
+      duelCases.forEach(c => {
+        const btn = document.createElement('button');
+        btn.textContent = c.name;
+        btn.title = c.description;
+        btn.addEventListener('click', () => playDiagnosisDuel(c));
+        duelArea.appendChild(btn);
       });
     }
 
-    window.addEventListener('scroll', handleScrollAnimation);
-    window.addEventListener('load', () => {
-      handleScrollAnimation();
-    });
-
-    // Navigation menu mobile toggle
-    const menuToggle = select('#menuToggle');
-    const navMenu = select('#navMenu');
-    menuToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
-      if(navMenu.classList.contains('open')){
-        navMenu.querySelectorAll('a').forEach((a,i) => a.tabIndex = 0);
-      } else {
-        navMenu.querySelectorAll('a').forEach((a,i) => a.tabIndex = -1);
-      }
-    });
-
-    // Dark/light theme toggle
-    const themeToggle = select('#themeToggle');
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = document.body.getAttribute('data-theme');
-      if(currentTheme === 'dark'){
-        document.body.setAttribute('data-theme', 'light');
-        themeToggle.textContent = '🌑';
-      } else {
-        document.body.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '🌗';
-      }
-    });
-
-    // HERO ENTER VAULT BUTTON
-    const enterVaultBtn = select('#enterVault');
-    enterVaultBtn.addEventListener('click', () => {
-      document.querySelector('#games').scrollIntoView({behavior: 'smooth'});
-      navMenu.classList.remove('open');
-    });
-
-    // GAME CARDS interaction - open modal with details
-    const modal = select('#modal');
-    const modalTitle = select('#modalTitle');
-    const modalContent = select('#modalContent');
-    const closeModalBtn = select('.close-modal');
-
-    const gameData = {
-      'diagnosis-duel': {
-        title: "Diagnosis Duel",
-        content: `
-          <strong>Description:</strong> Compete in a 1v1 match where both players receive the same case. The faster and more accurate diagnostician wins.<br><br>
-          <strong>Mechanics:</strong> You get patient data, symptoms, and tests. Choose diagnostics and treatments carefully.<br><br>
-          <strong>Ranks:</strong> Bronze → Silver → Gold → Platinum Medic<br><br>
-          <strong>Tip:</strong> Speed and precision are key. Review patient history carefully and use differential diagnosis logic.
-        `
-      },
-      'er-escape': {
-        title: "ER Escape Room",
-        content: `
-          <strong>Description:</strong> Immerse yourself in a chaotic emergency room. You must stabilize patients and make quick decisions to escape alive.<br><br>
-          <strong>Challenges:</strong> Multiple emergencies happen simultaneously; triage, prioritize, and treat in real time.<br><br>
-          <strong>Goal:</strong> Escape the ER within the time limit.<br><br>
-          <strong>Tip:</strong> Stay calm and don't forget basic emergency protocols.
-        `
-      },
-      'anatomy-puzzle': {
-        title: "Anatomy Puzzle",
-        content: `
-          <strong>Description:</strong> Piece together organ systems and understand anatomy by solving interactive puzzles.<br><br>
-          <strong>Features:</strong> Drag and drop organs, learn detailed facts, and quiz yourself.<br><br>
-          <strong>Goal:</strong> Master human anatomy and earn badges.<br><br>
-          <strong>Tip:</strong> Use the Anatomy Explorer to study before playing.
-        `
-      },
-      'case-creator': {
-        title: "Case Creator",
-        content: `
-          <strong>Description:</strong> Build your own medical mystery case! Add symptoms, tests, branching logic, and possible outcomes.<br><br>
-          <strong>Features:</strong> Share your cases and challenge friends.<br><br>
-          <strong>Tip:</strong> Think like a diagnostician; make clues clear but challenging.
-        `
-      }
-    };
-
-    selectAll('.game-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const gameKey = card.dataset.game;
-        if(gameData[gameKey]){
-          modalTitle.innerHTML = gameData[gameKey].title;
-          modalContent.innerHTML = gameData[gameKey].content;
-          openModal();
-        }
+    // ER Escape Room
+    const erRoomArea = select('#erRoomArea');
+    const erCases = casesDB.filter(c => c.game === 'er-escape');
+    if(!erCases.length){
+      erRoomArea.innerHTML = '<p>No ER Escape Room cases available.</p>';
+    } else {
+      erRoomArea.innerHTML = '';
+      erCases.forEach(c => {
+        const btn = document.createElement('button');
+        btn.textContent = c.name;
+        btn.title = c.description;
+        btn.addEventListener('click', () => playEREscapeRoom(c));
+        erRoomArea.appendChild(btn);
       });
-      card.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      });
-    });
-
-    // Modal open/close
-    function openModal(){
-      modal.classList.add('active');
-      modal.focus();
-      document.body.style.overflow = 'hidden';
-    }
-    function closeModal(){
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-    closeModalBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => {
-      if(e.target === modal){
-        closeModal();
-      }
-    });
-    window.addEventListener('keydown', e => {
-      if(e.key === 'Escape' && modal.classList.contains('active')){
-        closeModal();
-      }
-    });
-
-    // Helper for selecting all elements
-    function selectAll(selector){
-      return [...document.querySelectorAll(selector)];
     }
 
-    // Anatomy Explorer functionality
-    const organData = {
-      heart: {
-        name: 'Heart',
-        description: 'The heart pumps oxygenated blood throughout the body. Common diseases include myocardial infarction, arrhythmias, and heart failure.'
-      },
-      lungs: {
-        name: 'Lungs',
-        description: 'The lungs enable gas exchange, providing oxygen and removing carbon dioxide. Conditions include pneumonia, asthma, and COPD.'
-      },
-      liver: {
-        name: 'Liver',
-        description: 'The liver detoxifies blood, produces bile, and stores glycogen. Diseases include hepatitis, cirrhosis, and liver cancer.'
-      },
-      stomach: {
-        name: 'Stomach',
-        description: 'The stomach aids digestion by breaking down food with acid and enzymes. Issues include gastritis, ulcers, and cancer.'
-      },
-      brain: {
-        name: 'Brain',
-        description: 'The brain controls body functions and cognition. Neurological disorders include stroke, epilepsy, and Alzheimer’s disease.'
-      }
-    };
-    selectAll('.organ').forEach(organEl => {
-      organEl.addEventListener('click', () => {
-        const id = organEl.id;
-        if(organData[id]){
-          modalTitle.textContent = organData[id].name;
-          modalContent.textContent = organData[id].description;
-          openModal();
-        }
+    // Anatomy Puzzle Match
+    const anatomyPuzzleArea = select('#anatomyPuzzleArea');
+    const anatomyCases = casesDB.filter(c => c.game === 'anatomy-puzzle');
+    if(!anatomyCases.length){
+      anatomyPuzzleArea.innerHTML = '<p>No Anatomy Puzzle Match cases available.</p>';
+    } else {
+      anatomyPuzzleArea.innerHTML = '';
+      anatomyCases.forEach(c => {
+        const btn = document.createElement('button');
+        btn.textContent = c.name;
+        btn.title = c.description;
+        btn.addEventListener('click', () => playAnatomyPuzzle(c));
+        anatomyPuzzleArea.appendChild(btn);
       });
-      organEl.addEventListener('keydown', e => {
-        if(e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          organEl.click();
-        }
-      });
-    });
-
-    // Evidence Scanner drag-drop and click to upload
-    const scannerBox = select('#scannerBox');
-    const fileInput = select('#fileInput');
-    const scanResult = select('#scanResult');
-
-    scannerBox.addEventListener('dragover', e => {
-      e.preventDefault();
-      scannerBox.classList.add('dragover');
-    });
-    scannerBox.addEventListener('dragleave', e => {
-      scannerBox.classList.remove('dragover');
-    });
-    scannerBox.addEventListener('drop', e => {
-      e.preventDefault();
-      scannerBox.classList.remove('dragover');
-      handleFiles(e.dataTransfer.files);
-    });
-    scannerBox.addEventListener('click', () => {
-      fileInput.click();
-    });
-    fileInput.addEventListener('change', e => {
-      handleFiles(fileInput.files);
-    });
-
-    function handleFiles(files){
-      if(files.length === 0) return;
-      scanResult.textContent = `Scanning ${files.length} file(s)... 🩺`;
-      setTimeout(() => {
-        scanResult.textContent = "File scanned. 🩺 Suggestion: Possible pneumonia.";
-      }, 1500);
     }
 
-    // Case Report Generator
-    const reportForm = select('#reportForm');
-    const reportArea = select('#reportArea');
+    // Case Creator - not a game to play, just a placeholder
+    const caseCreatorArea = select('#caseCreatorArea');
+    caseCreatorArea.innerHTML = '<p>Create new cases in Admin Tools only.</p>';
+  }
 
-    reportForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const patientName = reportForm.patientName.value.trim();
-      const caseSummary = reportForm.caseSummary.value.trim();
-      const diagnosis = reportForm.diagnosis.value.trim();
-      const recommendations = reportForm.recommendations.value.trim();
-      if(!patientName || !caseSummary || !diagnosis) return;
+  // === GAME: Diagnosis Duel ===
+  const duelQuitBtn = select('#duelQuitBtn');
+  duelQuitBtn.addEventListener('click', () => quitGame('diagnosis-duel'));
+  function playDiagnosisDuel(caseObj){
+    // Simple interactive multiple choice question
+    const duelArea = select('#duelArea');
+    duelArea.innerHTML = '';
+    duelArea.setAttribute('aria-live', 'polite');
 
-      const timestamp = new Date().toLocaleString();
-      const badge = "🩺 MEDU Medic";
-      const rank = "Silver";
+    const question = document.createElement('p');
+    question.textContent = `Case: ${caseObj.name} — Choose the correct diagnosis:`;
+    duelArea.appendChild(question);
 
-      const reportHTML = `
-        <div role="region" aria-label="Generated Case Report">
-          <h3>Case Report for <strong>${patientName}</strong></h3>
-          <p><strong>Badge:</strong> ${badge}</p>
-          <p><strong>Rank:</strong> ${rank}</p>
-          <p><strong>Date:</strong> ${timestamp}</p>
-          <hr style="margin:1em 0; border-color: var(--cyan);"/>
-          <h4>Summary</h4>
-          <p>${caseSummary}</p>
-          <h4>Diagnosis</h4>
-          <p>${diagnosis}</p>
-          <h4>Recommendations</h4>
-          <p>${recommendations || 'N/A'}</p>
-          <button id="printReport" aria-label="Print case report">Print Report</button>
-        </div>
-      `;
-      reportArea.innerHTML = reportHTML;
-
-      // Print button listener
-      select('#printReport').addEventListener('click', () => {
-        const printContents = reportArea.innerHTML;
-        const originalContents = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
-        window.location.reload();
-      });
-
-      reportForm.reset();
-    });
-
-    // Leaderboard dynamic data
-    const leaderboardBody = select('#leaderboardBody');
-    const leaderboardEntries = [
-      {rank: "Platinum Medic", player: "DrApex", game: "Diagnosis Duel", score: 9200, level: 45},
-      {rank: "Gold Medic", player: "MedicNova", game: "ER Escape Room", score: 8600, level: 38},
-      {rank: "Silver Medic", player: "AnatomyAce", game: "Anatomy Puzzle", score: 7100, level: 33},
-      {rank: "Bronze Medic", player: "CaseBuilder", game: "Case Creator", score: 5600, level: 27},
-      {rank: "Gold Medic", player: "SurgeonX", game: "Diagnosis Duel", score: 8000, level: 36}
+    // Hardcoded choices for demo
+    const choices = [
+      {text: 'Pneumonia', correct: caseObj.name.toLowerCase().includes('pneumonia')},
+      {text: 'Heart Attack', correct: caseObj.name.toLowerCase().includes('heart')},
+      {text: 'Migraine', correct: false},
+      {text: 'Stroke', correct: false},
     ];
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.style.display = 'flex';
+    buttonsDiv.style.flexWrap = 'wrap';
+    buttonsDiv.style.gap = '0.8rem';
 
-    function renderLeaderboard(){
-      leaderboardBody.innerHTML = "";
-      leaderboardEntries.forEach(entry => {
-        let rankClass = "";
-        switch(entry.rank.toLowerCase()){
-          case "bronze medic": rankClass = "rank-bronze"; break;
-          case "silver medic": rankClass = "rank-silver"; break;
-          case "gold medic": rankClass = "rank-gold"; break;
-          case "platinum medic": rankClass = "rank-platinum"; break;
-          default: rankClass = "";
+    choices.forEach(c => {
+      const btn = document.createElement('button');
+      btn.textContent = c.text;
+      btn.addEventListener('click', () => {
+        if(c.correct){
+          duelArea.innerHTML = `<p>✅ Correct! You solved "${caseObj.name}".</p>`;
+          recordCompletion(currentPlayer.name, 'diagnosis-duel', 10);
+        } else {
+          duelArea.innerHTML = `<p>❌ Incorrect diagnosis. Try another case or try again.</p>`;
         }
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="${rankClass}">${entry.rank}</td>
-          <td>${entry.player}</td>
-          <td>${entry.game}</td>
-          <td>${entry.score.toLocaleString()}</td>
-          <td>${entry.level}</td>
-        `;
-        leaderboardBody.appendChild(tr);
       });
-    }
-    renderLeaderboard();
+      buttonsDiv.appendChild(btn);
+    });
+    duelArea.appendChild(buttonsDiv);
+    showGameSection('diagnosis-duel');
+  }
 
-    // Admin panel case submission simulation
-    const adminSection = select('#admin');
-    const caseForm = select('#caseForm');
-    const adminMsg = select('#adminMsg');
+  // === GAME: ER Escape Room ===
+  const erQuitBtn = select('#erQuitBtn');
+  erQuitBtn.addEventListener('click', () => quitGame('er-escape'));
+  function playEREscapeRoom(caseObj){
+    const erRoomArea = select('#erRoomArea');
+    erRoomArea.innerHTML = `<p>You entered the emergency room scenario: ${caseObj.name}.</p>`;
 
-    function checkAdminMode() {
-      const params = new URLSearchParams(window.location.search);
-      if(params.get('admin') === 'true'){
-        // Show admin panel menu item and section
-        navMenu.querySelector('li:nth-child(6)').classList.remove('hidden');
-        caseForm.querySelector('button').disabled = false;
-        adminSection.scrollIntoView({behavior: 'smooth'});
-      } else {
-        // Hide admin panel menu item and section from tabbing
-        navMenu.querySelector('li:nth-child(6)').classList.add('hidden');
-        caseForm.querySelector('button').disabled = true;
-      }
-    }
-    checkAdminMode();
-
-    caseForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const name = caseForm.caseName.value.trim();
-      const desc = caseForm.caseDesc.value.trim();
-      const type = caseForm.caseType.value;
-      if(!name || !desc || !type){
-        adminMsg.textContent = "Please fill all fields.";
-        adminMsg.style.color = "#ff6b6b";
-        return;
-      }
-      // Simulate adding case (in real app this would post to backend)
-      adminMsg.textContent = `Case "${name}" added to ${type.replace(/-/g,' ')} games. (Simulation)`;
-      adminMsg.style.color = "#00ffea";
-      caseForm.reset();
-      setTimeout(() => { adminMsg.textContent = ''; }, 5000);
+    const btn1 = document.createElement('button');
+    btn1.textContent = 'Check Patient Vitals';
+    btn1.addEventListener('click', () => {
+      erRoomArea.innerHTML = `<p>Vitals checked: Blood pressure elevated, pulse rapid. Suspect cardiac event.</p><button id="erAction2">Administer oxygen</button>`;
+      select('#erAction2').addEventListener('click', () => {
+        erRoomArea.innerHTML = `<p>Oxygen administered. Patient stabilized.</p><button id="erFinish">Finish Scenario</button>`;
+        select('#erFinish').addEventListener('click', () => {
+          erRoomArea.innerHTML = `<p>✅ Scenario "${caseObj.name}" completed successfully.</p>`;
+          recordCompletion(currentPlayer.name, 'er-escape', 12);
+        });
+      });
     });
 
-  })();
+    erRoomArea.appendChild(btn1);
+    showGameSection('er-escape');
+  }
+
+  // === GAME: Anatomy Puzzle Match ===
+  const anatomyQuitBtn = select('#anatomyQuitBtn');
+  anatomyQuitBtn.addEventListener('click', () => quitGame('anatomy-puzzle'));
+
+  function playAnatomyPuzzle(caseObj){
+    const area = select('#anatomyPuzzleArea');
+    area.innerHTML = '';
+    // For demo, simple matching game of organ names to their location
+    const organs = ['Heart', 'Lungs', 'Liver'];
+    const locations = ['Chest center', 'Chest sides', 'Upper right abdomen'];
+
+    // Shuffle locations for challenge
+    function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+    const shuffledLocs = shuffle([...locations]);
+
+    const prompt = document.createElement('p');
+    prompt.textContent = `Match the organ to the correct location:`;
+    area.appendChild(prompt);
+
+    organs.forEach(org => {
+      const selectElem = document.createElement('select');
+      organsSelect = ['Select location', ...shuffledLocs];
+      organsSelect.forEach(loc => {
+        const opt = document.createElement('option');
+        opt.textContent = loc;
+        opt.value = loc;
+        selectElem.appendChild(opt);
+      });
+      const label = document.createElement('label');
+      label.textContent = org;
+      label.style.display = 'block';
+      label.appendChild(selectElem);
+      area.appendChild(label);
+    });
+
+    const submitBtn = document.createElement('button');
+    submitBtn.textContent = 'Submit Answers';
+    submitBtn.addEventListener('click', () => {
+      const selects = area.querySelectorAll('select');
+      let correctCount = 0;
+      selects.forEach((sel, idx) => {
+        if(
+          (organs[idx] === 'Heart' && sel.value === 'Chest center') ||
+          (organs[idx] === 'Lungs' && sel.value === 'Chest sides') ||
+          (organs[idx] === 'Liver' && sel.value === 'Upper right abdomen')
+        ){
+          correctCount++;
+        }
+      });
+      if(correctCount === organs.length){
+        area.innerHTML = `<p>✅ All correct! You completed the Anatomy Puzzle: ${caseObj.name}</p>`;
+        recordCompletion(currentPlayer.name, 'anatomy-puzzle', 15);
+      } else {
+        area.innerHTML += `<p>❌ Some answers are incorrect, please try again.</p>`;
+      }
+    });
+    area.appendChild(submitBtn);
+
+    showGameSection('anatomy-puzzle');
+  }
+
+  // === CASE CREATOR ===
+  const caseCreatorQuitBtn = select('#caseCreatorQuitBtn');
+  caseCreatorQuitBtn.addEventListener('click', () => quitGame('case-creator'));
+  function playCaseCreator(){
+    // Inform users cases can only be created by Admin in tools
+    const area = select('#caseCreatorArea');
+    area.innerHTML = `<p>Case creation is only available via Admin Tools.</p>`;
+    showGameSection('case-creator');
+  }
+
+  // === SHOW/HIDE GAME SECTIONS ===
+  function showGameSection(id){
+    selectAll('.game-section').forEach(section => {
+      if(section.id === id) section.classList.add('active');
+      else section.classList.remove('active');
+    });
+    scrollToSection(id);
+  }
+
+  function quitGame(id){
+    select(`#${id}`).classList.remove('active');
+    scrollToSection('games');
+  }
+
+  // === LEADERBOARD ===
+  const leaderboardBody = select('#leaderboardBody');
+  function renderLeaderboard(){
+    if(!leaderboardDB.length){
+      leaderboardBody.innerHTML = '<tr><td colspan="5">No leaderboard data available.</td></tr>';
+      return;
+    }
+    // Sort descending by score
+    leaderboardDB.sort((a,b) => b.score - a.score);
+    leaderboardBody.innerHTML = '';
+    leaderboardDB.forEach((p, idx) => {
+      const tr = document.createElement('tr');
+      let rankClass = '';
+      if(p.medals.includes('Gold')) rankClass = 'rank-gold';
+      else if(p.medals.includes('Silver')) rankClass = 'rank-silver';
+      else if(p.medals.includes('Bronze')) rankClass = 'rank-bronze';
+
+      tr.innerHTML = `
+        <td class="${rankClass}">${idx+1}</td>
+        <td>${p.player}</td>
+        <td>${p.game}</td>
+        <td>${p.score}</td>
+        <td>${p.medals.join(', ')}</td>
+      `;
+      leaderboardBody.appendChild(tr);
+    });
+  }
+
+  // === RECORD COMPLETION ===
+  // Increase score and maybe upgrade medal
+  function recordCompletion(playerName, game, points){
+    if(!playerName) return;
+    let player = leaderboardDB.find(p => p.player === playerName && p.game === game);
+    if(!player){
+      player = {player: playerName, game, score: 0, medals: ['Bronze']};
+      leaderboardDB.push(player);
+    }
+    player.score += points;
+
+    // Upgrade medals based on score
+    if(player.score >= 100 && !player.medals.includes('Gold')){
+      player.medals = ['Gold'];
+      alert(`${playerName} earned Gold Medal for ${game}! 🏅`);
+    } else if(player.score >= 50 && !player.medals.includes('Silver')){
+      player.medals = ['Silver'];
+      alert(`${playerName} earned Silver Medal for ${game}! 🥈`);
+    }
+    saveStorage();
+    renderLeaderboard();
+  }
+
+  // === ANATOMY EXPLORER MODAL ===
+  const detailModal = select('#detailModal');
+  const detailModalContent = select('#detailModalContent');
+  const detailModalTitle = select('#detailModalTitle');
+  const detailCloseBtn = detailModal.querySelector('.close-modal');
+
+  detailCloseBtn.addEventListener('click', () => {
+    detailModal.classList.remove('active');
+  });
+  detailModal.addEventListener('click', e => {
+    if(e.target === detailModal) detailModal.classList.remove('active');
+  });
+
+  // Organ info map
+  const organInfo = {
+    heart: {
+      title: 'Heart',
+      description: 'The heart pumps blood throughout the body. It is a vital organ in the circulatory system.',
+      cases: ['Heart Attack Simulation', 'Cardiac Arrest Emergency']
+    },
+    lungs: {
+      title: 'Lungs',
+      description: 'The lungs are responsible for gas exchange, providing oxygen and removing carbon dioxide.',
+      cases: ['Pneumonia Case', 'Asthma Emergency']
+    },
+    liver: {
+      title: 'Liver',
+      description: 'The liver processes nutrients and detoxifies harmful substances in the body.',
+      cases: ['Liver Failure Case', 'Hepatitis Infection']
+    }
+  };
+
+  // Organ click event
+  selectAll('.organ').forEach(org => {
+    org.addEventListener('click', () => {
+      const id = org.id;
+      if(organInfo[id]){
+        detailModalTitle.textContent = organInfo[id].title;
+        detailModalContent.innerHTML = `<p>${organInfo[id].description}</p><p><strong>Related Cases:</strong> ${organInfo[id].cases.join(', ')}</p>`;
+        detailModal.classList.add('active');
+        detailModal.focus();
+      }
+    });
+  });
+
+  // EVIDENCE SCANNER
+  const scannerBox = select('#scannerBox');
+  const fileInput = select('#fileInput');
+  const scanResult = select('#scanResult');
+
+  scannerBox.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  scannerBox.addEventListener('dragover', e => {
+    e.preventDefault();
+    scannerBox.classList.add('dragover');
+  });
+
+  scannerBox.addEventListener('dragleave', e => {
+    e.preventDefault();
+    scannerBox.classList.remove('dragover');
+  });
+
+  scannerBox.addEventListener('drop', e => {
+    e.preventDefault();
+    scannerBox.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    processFiles(files);
+  });
+
+  fileInput.addEventListener('change', e => {
+    const files = e.target.files;
+    processFiles(files);
+  });
+
+  function processFiles(files){
+    if(files.length === 0){
+      scanResult.textContent = 'No files uploaded.';
+      return;
+    }
+    scanResult.textContent = `Scanning ${files.length} file(s)...`;
+    setTimeout(() => {
+      scanResult.textContent = `Scan complete. Found no anomalies in uploaded files.`;
+    }, 1500);
+  }
+
+  // Case Report Generator form
+  const reportForm = select('#reportForm');
+  const reportArea = select('#reportArea');
+
+  reportForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const patientName = reportForm.patientName.value.trim();
+    const caseSummary = reportForm.caseSummary.value.trim();
+    const diagnosis = reportForm.diagnosis.value.trim();
+    const recommendations = reportForm.recommendations.value.trim();
+
+    if(!patientName || !caseSummary || !diagnosis){
+      reportArea.textContent = 'Please fill in all required fields.';
+      return;
+    }
+
+    const reportHTML = `
+      <h3>Case Report</h3>
+      <p><strong>Patient:</strong> ${patientName}</p>
+      <p><strong>Summary:</strong> ${caseSummary}</p>
+      <p><strong>Diagnosis:</strong> ${diagnosis}</p>
+      <p><strong>Recommendations:</strong> ${recommendations || 'None'}</p>
+    `;
+
+    reportArea.innerHTML = reportHTML;
+  });
+
+  // INITIAL LOAD
+  loadStorage();
+  updateAdminUI();
+  renderCasesInGames();
+  renderLeaderboard();
+  if(currentPlayer) updateUIForPlayer();
+})();
 </script>
+
 </body>
 </html>
