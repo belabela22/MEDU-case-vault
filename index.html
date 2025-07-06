@@ -1,606 +1,1107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>MEDU Case Vault</title>
-  <style>
-    /* ----------------- VARIABLES ----------------- */
-    :root {
-      --blue: #2a4f6d;
-      --light-blue: #4a90e2;
-      --cyan: #00bcd4;
-      --blue-dark: #1a2e3d;
-      --white: #f1faff;
-      --gray: #cbd5e1;
-      --bg: #f4faff;
-      --shadow: rgba(0,0,0,0.2);
-      --transition: 0.3s ease;
-    }
-    [data-theme="dark"] {
-      --bg: #0f171f;
-      --white: #d3e0ea;
-      --gray: #526674;
-      --shadow: rgba(0,0,0,0.7);
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MEDU Case Vault - Where Medicine Meets Mystery</title>
+<style>
+  /* =====================
+     Variables and Themes
+  ===================== */
+  :root {
+    --blue: #1a2e4c;
+    --cyan: #00cfff;
+    --light-blue: #4dcfff;
+    --white: #e6f0fa;
+    --dark-bg: #0a1626;
+    --gray-dark: #2a3a50;
+    --gray-light: #7a8ba6;
+    --shadow-color: rgba(0, 195, 255, 0.3);
+    --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --radius: 12px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  [data-theme="dark"] {
+    --blue: #70e1ff;
+    --cyan: #00b7ff;
+    --light-blue: #4dcfff;
+    --white: #f5faff;
+    --dark-bg: #061521;
+    --gray-dark: #142a44;
+    --gray-light: #a8caff;
+    --shadow-color: rgba(0, 195, 255, 0.7);
+  }
 
-    /* ----------------- RESET ----------------- */
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--blue-dark);
-      transition: background var(--transition), color var(--transition);
-      line-height: 1.5;
-    }
-    img { max-width:100%; display:block; }
+  /* ==============
+     Reset + Base
+  ============== */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+  body {
+    background: var(--dark-bg);
+    color: var(--white);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+  }
+  a {
+    color: var(--cyan);
+    text-decoration: none;
+  }
+  a:hover, a:focus {
+    text-decoration: underline;
+  }
+  button {
+    cursor: pointer;
+    font-family: var(--font-sans);
+    background: var(--cyan);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.6em 1.4em;
+    font-weight: 600;
+    color: var(--dark-bg);
+    box-shadow: 0 0 10px var(--shadow-color);
+    transition: background-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  button:hover, button:focus {
+    background-color: var(--light-blue);
+    box-shadow: 0 0 20px var(--shadow-color);
+    transform: translateY(-3px);
+    outline: none;
+  }
+  input, select, textarea {
+    border-radius: var(--radius);
+    border: none;
+    padding: 0.5em 0.8em;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 0.3em;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+  h1, h2, h3, h4 {
+    font-weight: 700;
+    text-shadow: 0 0 8px var(--shadow-color);
+  }
+  h1 { font-size: 3.2rem; margin-bottom: 0.2em; }
+  h2 { font-size: 2.4rem; margin-bottom: 0.8em; }
+  h3 { font-size: 1.6rem; margin-bottom: 0.5em; }
+  p {
+    font-size: 1.05rem;
+    color: var(--white);
+    margin-bottom: 1em;
+  }
 
-    /* ----------------- NAVBAR ----------------- */
-    nav {
-      position: sticky;
-      top: 0;
-      background: var(--blue);
-      padding: 0.5em 1em;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 4px var(--shadow);
-      z-index: 1000;
+  /* ==============
+     Layout
+  ============== */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    background: var(--blue);
+    padding: 1em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px var(--shadow-color);
+  }
+  nav .logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--white);
+    letter-spacing: 2px;
+    user-select: none;
+  }
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.6em;
+    flex-wrap: wrap;
+  }
+  nav li {
+    user-select: none;
+  }
+  nav li.hidden {
+    display: none;
+  }
+  nav a {
+    font-weight: 600;
+    color: var(--white);
+    padding: 0.4em 0.8em;
+    border-radius: var(--radius);
+    transition: background-color var(--transition);
+  }
+  nav a:hover, nav a:focus {
+    background-color: var(--cyan);
+    color: var(--dark-bg);
+    outline: none;
+  }
+  nav button#themeToggle {
+    background: transparent;
+    font-size: 1.7rem;
+    box-shadow: none;
+    color: var(--white);
+    padding: 0.2em 0.6em 0 0.6em;
+    border-radius: 50%;
+    transition: color var(--transition);
+  }
+  nav button#themeToggle:hover {
+    color: var(--cyan);
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 2rem auto 6rem;
+    padding: 0 1.4rem;
+  }
+
+  /* ==============
+     HERO SECTION
+  ============== */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 85vh;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    border-radius: var(--radius);
+    text-align: center;
+    box-shadow: 0 0 30px var(--shadow-color);
+    user-select: none;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: 4.5rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .hero p.subtitle {
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 0.1rem;
+    opacity: 0.85;
+    font-style: italic;
+    letter-spacing: 0.8px;
+  }
+  .hero p.author {
+    font-size: 1rem;
+    opacity: 0.7;
+    margin-bottom: 2.2rem;
+  }
+  .hero button#enterVault {
+    font-size: 1.3rem;
+    padding: 1em 3em;
+    font-weight: 900;
+    box-shadow: 0 0 20px var(--shadow-color);
+    border: 2px solid var(--white);
+    color: var(--white);
+    background: transparent;
+    transition:
+      background-color 0.4s ease,
+      color 0.4s ease,
+      box-shadow 0.4s ease,
+      transform 0.3s ease;
+  }
+  .hero button#enterVault:hover,
+  .hero button#enterVault:focus {
+    background-color: var(--white);
+    color: var(--dark-bg);
+    box-shadow: 0 0 40px var(--shadow-color);
+    transform: translateY(-5px);
+    outline: none;
+  }
+
+  /* ==============
+     SECTIONS
+  ============== */
+  section {
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation-fill-mode: forwards;
+    animation-name: fadeInUp;
+    animation-duration: 0.7s;
+  }
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-    .logo { font-size: 1.3em; color: var(--white); font-weight: 600; }
+  }
+  section h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    margin-bottom: 1rem;
+    user-select: none;
+  }
+  section p.intro {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    opacity: 0.85;
+  }
+
+  /* ==============
+     GAMES GRID
+  ============== */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 2rem;
+  }
+  .game-card {
+    background: var(--gray-dark);
+    border-radius: var(--radius);
+    padding: 1.6rem 2rem;
+    box-shadow: 0 0 15px var(--shadow-color);
+    cursor: pointer;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      background-color var(--transition);
+    user-select: none;
+    outline-offset: 4px;
+  }
+  .game-card:focus,
+  .game-card:hover {
+    background-color: var(--blue);
+    box-shadow: 0 0 40px var(--shadow-color);
+    transform: translateY(-10px);
+    outline: none;
+  }
+  .game-card span.icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 3px var(--cyan));
+  }
+  .game-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .game-card p {
+    text-align: center;
+    font-size: 1rem;
+    opacity: 0.85;
+    line-height: 1.4;
+  }
+
+  /* ==============
+     SHADOW CASES LOCKER
+  ============== */
+  .locker {
+    background: var(--gray-dark);
+    border-radius: var(--radius);
+    padding: 3rem 2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--gray-light);
+    box-shadow: inset 0 0 20px var(--shadow-color);
+    user-select: none;
+  }
+
+  /* ==============
+     ANATOMY EXPLORER
+  ============== */
+  .anatomy-map {
+    margin: 0 auto;
+    max-width: 650px;
+    background: var(--gray-dark);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    box-shadow: 0 0 20px var(--shadow-color);
+    user-select: none;
+  }
+  .anatomy-map svg {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+  }
+  .organ {
+    fill: var(--blue);
+    transition: fill 0.3s ease;
+  }
+  .organ:hover, .organ:focus {
+    fill: var(--cyan);
+    outline: none;
+    filter: drop-shadow(0 0 10px var(--cyan));
+  }
+  .organ-label {
+    fill: var(--white);
+    font-size: 1rem;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ==============
+     EVIDENCE SCANNER
+  ============== */
+  .scanner-box {
+    background: var(--gray-dark);
+    border: 2px dashed var(--cyan);
+    border-radius: var(--radius);
+    padding: 3rem;
+    text-align: center;
+    font-size: 1.4rem;
+    color: var(--cyan);
+    box-shadow: 0 0 30px var(--shadow-color);
+    user-select: none;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  .scanner-box.dragover {
+    background-color: var(--cyan);
+    color: var(--dark-bg);
+  }
+  #scanResult {
+    margin-top: 1rem;
+    font-weight: 700;
+    min-height: 1.4rem;
+  }
+
+  /* ==============
+     CASE REPORT GENERATOR
+  ============== */
+  #reportArea > div {
+    background: var(--gray-dark);
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius);
+    box-shadow: 0 0 25px var(--shadow-color);
+    margin-top: 1rem;
+    color: var(--white);
+    user-select: text;
+  }
+  #reportArea > div button {
+    margin-top: 1rem;
+    background: var(--cyan);
+    color: var(--dark-bg);
+    font-weight: 700;
+  }
+
+  /* ==============
+     LEADERBOARD TABLE
+  ============== */
+  .leaderboard {
+    overflow-x: auto;
+  }
+  .leaderboard table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--gray-dark);
+    box-shadow: 0 0 25px var(--shadow-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .leaderboard th, .leaderboard td {
+    padding: 1rem 1.4rem;
+    text-align: center;
+    color: var(--white);
+    user-select: none;
+  }
+  .leaderboard th {
+    background: var(--blue);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .leaderboard tbody tr:nth-child(even) {
+    background: var(--gray-light);
+    color: var(--dark-bg);
+  }
+  .rank-bronze {
+    background: #cd7f32;
+    color: #fff;
+    font-weight: 700;
+  }
+  .rank-silver {
+    background: #c0c0c0;
+    color: #333;
+    font-weight: 700;
+  }
+  .rank-gold {
+    background: #ffd700;
+    color: #333;
+    font-weight: 700;
+  }
+  .rank-platinum {
+    background: #e5e4e2;
+    color: #333;
+    font-weight: 700;
+  }
+
+  /* ==============
+     ADMIN PANEL
+  ============== */
+  .admin-panel {
+    background: var(--gray-dark);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 0 30px var(--shadow-color);
+    user-select: none;
+  }
+  .admin-panel form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem 3rem;
+  }
+  .admin-panel label {
+    font-weight: 700;
+    display: block;
+    color: var(--cyan);
+  }
+  .admin-panel input, .admin-panel select {
+    margin-top: 0.4rem;
+    background: var(--dark-bg);
+    border: 2px solid var(--cyan);
+    color: var(--white);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  .admin-panel input:focus, .admin-panel select:focus {
+    border-color: var(--light-blue);
+    outline: none;
+  }
+  .admin-panel button {
+    grid-column: span 2;
+    margin-top: 1.2rem;
+  }
+
+  /* ==============
+     TIMELINE / ARCHIVES
+  ============== */
+  .timeline {
+    border-left: 4px solid var(--cyan);
+    margin-left: 1rem;
+    padding-left: 1.5rem;
+  }
+  .entry {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  .entry::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--shadow-color);
+  }
+  .entry h4 {
+    margin-bottom: 0.6rem;
+    user-select: none;
+  }
+  .entry p {
+    font-size: 1rem;
+    opacity: 0.85;
+  }
+
+  /* ==============
+     MODAL
+  ============== */
+  .modal-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+  }
+  .modal-bg.active {
+    visibility: visible;
+    opacity: 1;
+  }
+  .modal {
+    background: var(--gray-dark);
+    border-radius: var(--radius);
+    max-width: 500px;
+    width: 90%;
+    padding: 2rem;
+    box-shadow: 0 0 40px var(--shadow-color);
+    color: var(--white);
+    position: relative;
+    user-select: text;
+  }
+  .modal h3 {
+    margin-bottom: 1rem;
+  }
+  .modal p {
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+  .modal button.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    font-size: 1.7rem;
+    color: var(--cyan);
+    cursor: pointer;
+  }
+  .modal button.close-modal:hover {
+    color: var(--light-blue);
+  }
+
+  /* ==============
+     RESPONSIVE
+  ============== */
+  @media (max-width: 768px) {
     nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1em;
+      display: none;
     }
-    nav li.hidden { display:none; }
-    nav a {
-      color: var(--white);
-      padding: 0.5em;
-      text-decoration: none;
-      transition: background var(--transition);
-      border-radius: 4px;
-    }
-    nav a:hover, nav a:focus {
-      background: var(--cyan);
-    }
-
-    /* ----------------- THEME TOGGLE ----------------- */
-    .theme-toggle {
-      background: var(--cyan);
-      border: none;
-      padding: 0.5em 0.8em;
-      border-radius: 4px;
-      color: var(--blue-dark);
-      transition: background var(--transition);
-      font-size: 1em;
-    }
-    .theme-toggle:hover {
-      background: var(--light-blue);
-    }
-
-    /* ----------------- HERO SECTION ----------------- */
-    .hero {
-      height: 80vh;
-      background: linear-gradient(to bottom, var(--blue), var(--cyan));
-      color: var(--white);
+    nav ul.open {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2em 1em;
-    }
-    .hero h1 {
-      font-size: 3.2em;
-      margin-bottom: 0.2em;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    }
-    .hero p.subtitle {
-      font-size: 1.2em;
-      margin-bottom: 0.5em;
-      letter-spacing: 0.5px;
-    }
-    .hero p.author {
-      font-size: 0.9em;
-      opacity: 0.8;
-    }
-    .hero button#enterVault {
-      background: var(--white);
-      border: none;
-      color: var(--blue-dark);
-      padding: 1em 1.8em;
-      font-size: 1.05em;
-      border-radius: 5px;
-      margin-top: 1em;
-      transition: transform var(--transition), box-shadow var(--transition);
-      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-    }
-    .hero button#enterVault:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-    }
-
-    /* ----------------- CONTENT WRAPPER ----------------- */
-    .content {
-      max-width: 1100px;
-      margin: 2em auto;
-      padding: 0 1em;
-    }
-    section {
-      margin-bottom: 3em;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.6s forwards;
-    }
-    section:nth-child(odd) { animation-delay: 0.2s; }
-    section:nth-child(even) { animation-delay: 0.4s; }
-    @keyframes fadeInUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    section h2 {
-      font-size: 1.8em;
-      color: var(--blue);
-      margin-bottom: 0.5em;
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-    }
-    section p.intro {
-      font-size: 1.05em;
-      margin-bottom: 1em;
-      color: var(--blue-dark);
-    }
-
-    /* ----------------- GAMES GRID ----------------- */
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
       gap: 1.2em;
-    }
-    .game-card {
-      background: var(--white);
-      padding: 1.5em;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px var(--shadow);
-      text-align: center;
-      transition: transform var(--transition), box-shadow var(--transition);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.8em;
-    }
-    .game-card:hover, .game-card:focus {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 16px var(--shadow);
-    }
-    .game-card span.icon {
-      font-size: 2.2em;
-    }
-    .game-card h3 { margin: 0.5em 0 0.3em; }
-    .game-card p {
-      font-size: 0.95em;
-      opacity: 0.85;
-    }
-
-    /* ----------------- LOCKED PANEL ----------------- */
-    .locker {
-      background: var(--gray);
-      color: #555;
-      padding: 2em;
-      text-align: center;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px var(--shadow);
-      font-style: italic;
-    }
-
-    /* ----------------- ANATOMY EXPLORER ----------------- */
-    .anatomy-map {
-      position: relative;
-      max-width: 600px;
-      margin: 1em auto;
-    }
-    .anatomy-map rect, .anatomy-map circle, .anatomy-map path {
-      fill: var(--light-blue);
-      cursor: pointer;
-      transition: fill var(--transition);
-    }
-    .anatomy-map rect:hover {
-      fill: var(--cyan);
-    }
-
-    /* ----------------- EVIDENCE SCANNER ----------------- */
-    .scanner-box {
-      border: 2px dashed var(--gray);
-      border-radius: 8px;
-      padding: 2em;
-      text-align: center;
-      background: var(--white);
-      box-shadow: 0 4px 10px var(--shadow);
-      position: relative;
-      cursor: pointer;
-    }
-    .scanner-box:hover {
-      background: var(--blue-dark); color: var(--white);
-    }
-
-    /* ----------------- REPORT AREA ----------------- */
-    #reportArea > div {
-      background: var(--white);
-      padding: 1em;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px var(--shadow);
-      margin-top: 1em;
-    }
-
-    /* ----------------- LEADERBOARD ----------------- */
-    .leaderboard {
-      overflow-x: auto;
-      margin-top: 1em;
-    }
-    .leaderboard table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--white);
-      box-shadow: 0 4px 8px var(--shadow);
-    }
-    .leaderboard th, .leaderboard td {
-      padding: 0.9em 1em;
-      border-bottom: 1px solid var(--gray);
-      text-align: center;
-    }
-    .leaderboard th {
+      position: fixed;
+      top: 60px;
+      right: 0;
       background: var(--blue);
-      color: var(--white);
+      width: 220px;
+      padding: 1.5rem;
+      border-radius: 0 0 0 var(--radius);
+      box-shadow: 0 0 15px var(--shadow-color);
+      z-index: 20000;
     }
-    .rank-bronze { background: #cd7f32; color: #fff; }
-    .rank-silver { background: #c0c0c0; color: #fff; }
-    .rank-gold { background: #ffd700; color: #333; }
-    .rank-platinum { background: #e5e4e2; color: #333; }
-
-    /* ----------------- ADMIN TOOLS ----------------- */
-    .admin-panel {
-      background: var(--white);
-      padding: 1.5em;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px var(--shadow);
-    }
-    .admin-panel form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8em;
-    }
-    .admin-panel label { font-weight: 600; }
-    .admin-panel input, .admin-panel select, .admin-panel button {
-      padding: 0.6em;
-      border: 1px solid var(--gray);
-      border-radius:4px;
-    }
-    .admin-panel button {
-      background: var(--cyan);
+    nav button#menuToggle {
+      display: inline-block;
+      background: transparent;
+      font-size: 1.9rem;
       border: none;
       color: var(--white);
-      font-weight: 600;
-      transition: background var(--transition);
+      cursor: pointer;
+      padding: 0.2em 0.6em 0 0.6em;
+      border-radius: 50%;
+      box-shadow: none;
+      user-select: none;
     }
-    .admin-panel button:hover {
-      background: var(--light-blue);
+    nav button#menuToggle:hover {
+      color: var(--cyan);
     }
-
-    /* ----------------- ARCHIVES / TIMELINE ----------------- */
-    .timeline {
-      border-left: 3px solid var(--blue);
-      margin-left: 1em;
-      padding-left: 1em;
+  }
+  @media (min-width: 769px) {
+    nav button#menuToggle {
+      display: none;
     }
-    .timeline div.entry {
-      margin-bottom: 1.2em;
-      position: relative;
-    }
-    .timeline div.entry::before {
-      content:'';
-      position: absolute;
-      left: -8px; top:5px;
-      width: 12px; height:12px;
-      background: var(--cyan);
-      border-radius:50%;
-    }
-    .timeline div.entry h4 {
-      margin-bottom:0.3em;
-    }
-
-    /* ----------------- FOOTER ----------------- */
-    footer {
-      padding: 2em 1em;
-      text-align: center;
-      font-size:0.9em;
-      color: var(--gray);
-      border-top: 1px solid var(--gray);
-      background: var(--white);
-    }
-
-    /* ----------------- MODAL ----------------- */
-    .modal-bg {
-      position: fixed;
-      top:0; left:0; width:100%; height:100%;
-      background: rgba(0,0,0,0.6);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:2000;
-    }
-    .modal {
-      background: var(--white);
-      padding: 2em;
-      border-radius:8px;
-      box-shadow:0 4px 12px var(--shadow);
-      max-width: 400px;
-      width: 90%;
-      position: relative;
-      overflow-y: auto;
-      max-height: 80vh;
-    }
-    .modal h4 { margin-bottom:0.5em; }
-    .modal p { margin-bottom:1em; }
-    .modal button.close {
-      position: absolute;
-      top:0.6em; right:0.6em;
-      background:none;
-      border:none;
-      font-size:1.2em;
-      cursor:pointer;
-      color: var(--gray);
-    }
-
-    /* ----------------- RESPONSIVE RULES ----------------- */
-    @media(max-width: 900px) {
-      .games-grid { grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); }
-    }
-    @media(max-width: 600px){
-      nav ul { flex-wrap: wrap; gap:0.5em; justify-content:center; }
-      .hero h1 { font-size:2.5em; }
-      section h2 { font-size:1.6em; }
-    }
-  </style>
+  }
+</style>
 </head>
-<body>
+<body data-theme="dark">
+<nav>
+  <div class="logo" tabindex="0" aria-label="MEDU Case Vault Logo">MEDU Case Vault</div>
+  <ul id="navMenu" role="menubar" aria-label="Main Navigation">
+    <li role="none"><a href="#games" role="menuitem" tabindex="0">Games</a></li>
+    <li role="none"><a href="#anatomy" role="menuitem" tabindex="-1">Anatomy Explorer</a></li>
+    <li role="none"><a href="#scanner" role="menuitem" tabindex="-1">Evidence Scanner</a></li>
+    <li role="none"><a href="#report" role="menuitem" tabindex="-1">Case Reports</a></li>
+    <li role="none"><a href="#leaderboard" role="menuitem" tabindex="-1">Leaderboard</a></li>
+    <li role="none"><a href="#admin" role="menuitem" tabindex="-1">Admin Panel</a></li>
+  </ul>
+  <button id="themeToggle" aria-label="Toggle Dark/Light Mode" title="Toggle Dark/Light Mode">🌗</button>
+  <button id="menuToggle" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu">☰</button>
+</nav>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <div class="logo">MEDU Case Vault</div>
-    <ul>
-      <li><a href="#home">Home</a></li>
-      <li><a href="#games">Games</a></li>
-      <li><a href="#shadow">Shadow Cases</a></li>
-      <li><a href="#anatomy">Anatomy Explorer</a></li>
-      <li><a href="#scanner">Evidence Scanner</a></li>
-      <li><a href="#report">Report Generator</a></li>
-      <li><a href="#leaderboard">Leaderboard</a></li>
-      <li><a href="#archives">Archives</a></li>
-      <li class="hidden" id="admin-tools"><a href="#admin">Admin Tools</a></li>
-      <li><a href="#about">About</a></li>
-    </ul>
-    <button class="theme-toggle" id="themeToggle">🌙</button>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero" id="home">
+<main>
+  <section class="hero" aria-label="Welcome Banner">
     <h1>MEDU Case Vault</h1>
     <p class="subtitle">Where Medicine Meets Mystery</p>
-    <p class="author">Luna.C.Everly | Medical Education Overseer</p>
-    <button id="enterVault">Enter Vault</button>
+    <p class="author">Unlock your inner diagnostician</p>
+    <button id="enterVault" aria-haspopup="true" aria-controls="games" aria-label="Enter the Case Vault">Enter Vault</button>
   </section>
 
-  <div class="content">
-
-    <!-- INTERACTIVE GAMES -->
-    <section id="games">
-      <h2>🕹️ Interactive Games</h2>
-      <p class="intro">Choose your challenge—each designed to train clinical reasoning and decision-making in immersive scenarios.</p>
-      <div class="games-grid">
-        <div class="game-card" tabIndex="0" data-game="duel">
-          <span class="icon">🧠</span><h3>Diagnosis Duel</h3>
-          <p>Face another trainee in a timed diagnostic showdown. Who will see the hidden disease first?</p>
-        </div>
-        <div class="game-card" tabIndex="0" data-game="escape">
-          <span class="icon">🚨</span><h3>ER Escape Room</h3>
-          <p>Navigate through an ER crisis—stabilize patients before time runs out.</p>
-        </div>
-        <div class="game-card" tabIndex="0" data-game="anatomy">
-          <span class="icon">🧪</span><h3>Anatomy Puzzle Match</h3>
-          <p>Match organ names and structures before the timer ends—learn while you play.</p>
-        </div>
-        <div class="game-card" tabIndex="0" data-game="creator">
-          <span class="icon">📄</span><h3>Case Creator Game</h3>
-          <p>Design your own clinical case—then share and solve with peers.</p>
-        </div>
+  <section id="games" tabindex="0" aria-label="Games Section" aria-live="polite" aria-relevant="additions">
+    <h2>🔬 MEDU Games Collection</h2>
+    <p class="intro">Choose a game mode below to train your medical skills and challenge your mind.</p>
+    <div class="games-grid" role="list">
+      <div class="game-card" role="listitem" tabindex="0" data-game="diagnosis-duel" aria-label="Diagnosis Duel Game">
+        <span class="icon" aria-hidden="true">🧠</span>
+        <h3>Diagnosis Duel</h3>
+        <p>1v1 competitive case-solving battle. Solve fast, solve right, climb ranks from Bronze to Platinum Medic.</p>
       </div>
-    </section>
-
-    <!-- SHADOW CASES -->
-    <section id="shadow">
-      <h2>🔒 Shadow Cases</h2>
-      <p class="intro">Highly confidential cases—access requires clearance.</p>
-      <div class="locker">
-        Access Redacted.  
-        Progress through games to unlock shadow archive.
+      <div class="game-card" role="listitem" tabindex="0" data-game="er-escape" aria-label="ER Escape Room Game">
+        <span class="icon" aria-hidden="true">🚨</span>
+        <h3>ER Escape Room</h3>
+        <p>Navigate emergency scenarios against time. Can you escape the chaos?</p>
       </div>
-    </section>
-
-    <!-- ANATOMY EXPLORER -->
-    <section id="anatomy">
-      <h2>🧬 Anatomy Explorer</h2>
-      <p class="intro">Hover over organs to explore details and past relevant cases.</p>
-      <div class="anatomy-map">
-        <!-- Simple SVG block placeholder -->
-        <svg width="100%" height="250">
-          <rect x="60" y="40" width="120" height="120" rx="15" ry="15"
-                data-org="heart" />
-          <text x="120" y="110" text-anchor="middle" fill="#fff">Heart</text>
-        </svg>
-        <p style="text-align:center; opacity:0.7;">Heart region — click to learn more.</p>
+      <div class="game-card" role="listitem" tabindex="0" data-game="anatomy-puzzle" aria-label="Anatomy Puzzle Game">
+        <span class="icon" aria-hidden="true">🧩</span>
+        <h3>Anatomy Puzzle</h3>
+        <p>Piece together organ systems and master human anatomy through interactive puzzles.</p>
       </div>
-    </section>
-
-    <!-- EVIDENCE SCANNER -->
-    <section id="scanner">
-      <h2>🖼️ Evidence Scanner</h2>
-      <p class="intro">Drag-and-drop scan simulation below to get a quick analysis.</p>
-      <div class="scanner-box" id="scannerBox">
-        Drag & drop file here<br><em>(simulation)</em>
+      <div class="game-card" role="listitem" tabindex="0" data-game="case-creator" aria-label="Case Creator Tool">
+        <span class="icon" aria-hidden="true">✍️</span>
+        <h3>Case Creator</h3>
+        <p>Build and share your own medical mystery cases with custom branching logic and clues.</p>
       </div>
-      <button id="fakeScan" style="margin-top:1em;">Scan Evidence</button>
-      <p id="scanResult" style="margin-top:0.6em; font-weight:600;"></p>
-    </section>
+    </div>
+  </section>
 
-    <!-- CASE REPORT GENERATOR -->
-    <section id="report">
-      <h2>📑 Case Report Generator</h2>
-      <p class="intro">Generate your case completion report below.</p>
-      <button id="genReport">Generate Report</button>
-      <div id="reportArea"></div>
-    </section>
+  <section id="anatomy" tabindex="0" aria-label="Anatomy Explorer Section">
+    <h2>🫀 Anatomy Explorer</h2>
+    <p class="intro">Click on an organ to learn detailed medical information and clinical correlations.</p>
+    <div class="anatomy-map" role="img" aria-label="Diagram of human torso organs">
+      <svg viewBox="0 0 500 700" role="presentation" aria-hidden="true" tabindex="-1" >
+        <!-- Outline body -->
+        <rect x="100" y="20" width="300" height="660" rx="50" ry="50" fill="#1f3350" />
+        <!-- Organs -->
+        <circle class="organ" id="heart" tabindex="0" cx="250" cy="200" r="45" aria-label="Heart, click for info" />
+        <ellipse class="organ" id="lungs" tabindex="0" cx="250" cy="350" rx="80" ry="120" aria-label="Lungs, click for info" />
+        <ellipse class="organ" id="liver" tabindex="0" cx="330" cy="520" rx="130" ry="70" aria-label="Liver, click for info" />
+        <ellipse class="organ" id="stomach" tabindex="0" cx="170" cy="510" rx="90" ry="60" aria-label="Stomach, click for info" />
+        <ellipse class="organ" id="brain" tabindex="0" cx="250" cy="80" rx="70" ry="50" aria-label="Brain, click for info" />
+      </svg>
+    </div>
+  </section>
 
-    <!-- LEADERBOARD -->
-    <section id="leaderboard">
-      <h2>🏅 Leaderboard</h2>
-      <p class="intro">Track your progress and compare with peers across tiers.</p>
-      <div class="leaderboard">
-        <table>
-          <thead>
-            <tr><th>Rank</th><th>Trainee</th><th>Cases Solved</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="rank-bronze">Bronze Medic</td><td>Alice</td><td>5</td></tr>
-            <tr><td class="rank-silver">Silver Medic</td><td>Bob</td><td>12</td></tr>
-            <tr><td class="rank-gold">Gold Medic</td><td>Charlie</td><td>25</td></tr>
-            <tr><td class="rank-platinum">Platinum Medic</td><td>Diana</td><td>40</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+  <section id="scanner" tabindex="0" aria-label="Evidence Scanner Section">
+    <h2>🔎 Evidence Scanner</h2>
+    <p class="intro">Drag and drop medical images, reports, or clues below to analyze evidence.</p>
+    <div class="scanner-box" id="scannerBox" tabindex="0" aria-dropeffect="copy" aria-label="Drop files here to scan">
+      Drop files here or click to upload
+      <input type="file" id="fileInput" accept="image/*,.pdf,.txt" style="display:none;" multiple />
+    </div>
+    <div id="scanResult" aria-live="polite" aria-atomic="true"></div>
+  </section>
 
-    <!-- ADMIN TOOLS (Hidden) -->
-    <section id="admin">
-      <h2>🛠️ Admin Tools</h2>
-      <p class="intro">Administrative panel to manage cases and stats.</p>
-      <div class="locker" id="adminLocker">🔐 Admin access required. Append <code>?admin=true</code> to URL.</div>
-      <div class="admin-panel" id="adminPanel" style="display:none;">
-        <form id="caseForm">
-          <label>Case Title:</label><input type="text" id="caseTitle" placeholder="e.g., Mr. Smith — Chest Pain">
-          <label>Difficulty:</label>
-          <select id="caseDiff">
-            <option>Easy</option><option>Medium</option><option>Hard</option>
-          </select>
-          <label>Status:</label>
-          <select id="caseStatus">
-            <option>Open</option><option>Solved</option><option>Archived</option>
-          </select>
-          <button type="button" id="submitCase">Submit Case</button>
-        </form>
-      </div>
-    </section>
+  <section id="report" tabindex="0" aria-label="Case Report Generator Section">
+    <h2>📋 Case Report Generator</h2>
+    <p class="intro">Generate detailed reports for your cases and print or share your findings.</p>
+    <form id="reportForm" aria-label="Case report generation form">
+      <label for="patientName">Patient Name:</label>
+      <input type="text" id="patientName" name="patientName" required autocomplete="off" placeholder="John Doe" />
+      <label for="caseSummary">Summary:</label>
+      <textarea id="caseSummary" name="caseSummary" rows="4" required placeholder="Brief case description..."></textarea>
+      <label for="diagnosis">Diagnosis:</label>
+      <input type="text" id="diagnosis" name="diagnosis" required autocomplete="off" placeholder="Diagnosis here" />
+      <label for="recommendations">Recommendations:</label>
+      <textarea id="recommendations" name="recommendations" rows="3" placeholder="Treatment and advice..."></textarea>
+      <button type="submit">Generate Report</button>
+    </form>
+    <div id="reportArea" aria-live="polite"></div>
+  </section>
 
-    <!-- ARCHIVES / TIMELINE -->
-    <section id="archives">
-      <h2>📜 Archives</h2>
-      <p class="intro">A historical ledger of MEDU’s journey.</p>
-      <div class="timeline">
-        <div class="entry"><h4>2024 – Launch of Diagnosis Duel</h4><p>The first interactive case duel released to public testing.</p></div>
-        <div class="entry"><h4>Early 2025 – ER Escape Room Released</h4><p>A high-stress ER simulation challenge introduced.</p></div>
-        <div class="entry"><h4>Mid 2025 – Anatomy Puzzle & Case Creator Added</h4><p>These complete the core suite of simulations.</p></div>
-      </div>
-    </section>
+  <section id="leaderboard" tabindex="0" aria-label="Leaderboard Section">
+    <h2>🏆 Leaderboard</h2>
+    <p class="intro">Track the top players across all game modes and their ranks.</p>
+    <div class="leaderboard" role="table" aria-label="Leaderboard table">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Player</th>
+            <th scope="col">Game Mode</th>
+            <th scope="col">Score</th>
+            <th scope="col">Level</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardBody">
+          <!-- Dynamic leaderboard rows here -->
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-    <!-- ABOUT -->
-    <section id="about">
-      <h2>ℹ️ About</h2>
-      <p class="intro">The MEDU Case Vault is an educational, gamified clinical simulation crafted for SWM’s Medical Education Department. Designed and overseen by <strong>Luna.C.Everly</strong>, it aims to make learning clinical reasoning immersive and engaging. Built with modern HTML5, CSS3, and vanilla JS—for GitHub Pages deployment.</p>
-    </section>
+  <section id="admin" tabindex="0" aria-label="Admin Panel Section">
+    <h2>🛠️ Admin Panel</h2>
+    <p class="intro">Create new cases and manage game content (simulated, no backend).</p>
+    <div class="admin-panel" role="region" aria-live="polite" aria-atomic="true">
+      <form id="caseForm">
+        <label for="caseName">Case Name</label>
+        <input type="text" id="caseName" name="caseName" required autocomplete="off" placeholder="Enter case title" />
+        <label for="caseDesc">Description</label>
+        <textarea id="caseDesc" name="caseDesc" rows="3" required placeholder="Brief case summary"></textarea>
+        <label for="caseType">Case Type</label>
+        <select id="caseType" name="caseType" required>
+          <option value="" disabled selected>Select type</option>
+          <option value="diagnosis-duel">Diagnosis Duel</option>
+          <option value="er-escape">ER Escape Room</option>
+          <option value="anatomy-puzzle">Anatomy Puzzle</option>
+          <option value="case-creator">Case Creator</option>
+        </select>
+        <button type="submit">Add Case</button>
+      </form>
+      <div id="adminMsg" aria-live="polite" style="margin-top:1rem;"></div>
+    </div>
+  </section>
 
-  </div>
-
-  <footer>© 2025 SWM | Medical Education Department</footer>
-
-  <!-- GAME MODAL -->
-  <div class="modal-bg" id="gameModal">
-    <div class="modal">
-      <button class="close" id="modalClose">✖</button>
-      <h4 id="modalTitle">Game Title</h4>
-      <p id="modalDesc">Description goes here.</p>
-      <button id="startGame">Start</button>
+  <!-- MODAL -->
+  <div id="modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+    <div class="modal" role="document">
+      <button class="close-modal" aria-label="Close modal">×</button>
+      <h3 id="modalTitle"></h3>
+      <p id="modalContent"></p>
     </div>
   </div>
+</main>
 
-  <script>
-    // ---------- THEME SWITCHER ----------
-    const themeBtn = document.getElementById('themeToggle');
-    themeBtn.onclick = () => {
-      let mode = document.documentElement.getAttribute('data-theme');
-      document.documentElement.setAttribute('data-theme', mode === 'dark' ? '' : 'dark');
-      themeBtn.textContent = themeBtn.textContent === '🌙' ? '☀️' : '🌙';
-    };
+<script>
+  (() => {
+    'use strict';
 
-    // ---------- SCROLL TO CONTENT ----------
-    document.getElementById('enterVault').onclick = () => {
-      const y = document.querySelector('.content').offsetTop - 60;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    };
-
-    // ---------- GAME MODAL HANDLING ----------
-    const modalBg = document.getElementById('gameModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDesc = document.getElementById('modalDesc');
-    document.querySelectorAll('.game-card').forEach(card => {
-      card.onclick = () => {
-        modalTitle.textContent = card.querySelector('h3').textContent;
-        modalDesc.textContent = card.querySelector('p').textContent;
-        modalBg.style.display = 'flex';
-      };
-    });
-    document.getElementById('modalClose').onclick = () => { modalBg.style.display = 'none'; };
-
-    // ---------- EVIDENCE SCANNER SIM ----------
-    document.getElementById('fakeScan').onclick = () => {
-      setTimeout(() => {
-        document.getElementById('scanResult').textContent = 'File scanned. 🩺 Suggestion: Possible pneumonia.';
-      }, 500);
-    };
-
-    // ---------- CASE REPORT GENERATOR ----------
-    document.getElementById('genReport').onclick = () => {
-      const now = new Date().toLocaleString();
-      document.getElementById('reportArea').innerHTML = `
-        <div>
-          <h4>Case Report</h4>
-          <p><strong>User:</strong> TraineeX</p>
-          <p><strong>Badge:</strong> Gold Medic</p>
-          <p><strong>Cases Solved:</strong> 18</p>
-          <p><strong>Timestamp:</strong> ${now}</p>
-          <button onclick="this.parentElement.remove()">Dismiss</button>
-        </div>`;
-    };
-
-    // ---------- ADMIN PANEL TOGGLE ----------
-    if (new URLSearchParams(window.location.search).get('admin') === 'true') {
-      document.getElementById('admin-tools').classList.remove('hidden');
-      document.getElementById('adminLocker').style.display = 'none';
-      document.getElementById('adminPanel').style.display = 'block';
+    // Helper functions
+    function select(selector, all = false) {
+      return all ? [...document.querySelectorAll(selector)] : document.querySelector(selector);
+    }
+    function animateSection(section) {
+      section.classList.add('visible');
     }
 
-    // ---------- ANATOMY ORGAN HOVER MODAL ----------
-    const anatomySVG = document.querySelector('.anatomy-map svg');
-    anatomySVG.addEventListener('click', (e) => {
-      if (e.target.dataset.org) {
-        const org = e.target.dataset.org;
-        modalTitle.textContent = org.charAt(0).toUpperCase() + org.slice(1) + ' Info';
-        modalDesc.textContent = `Detailed info about ${org} (placeholder).`;
-        modalBg.style.display = 'flex';
+    // Animate sections on scroll
+    function handleScrollAnimation() {
+      const sections = select('section', true);
+      const triggerBottom = window.innerHeight * 0.85;
+      sections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
+        if (sectionTop < triggerBottom) {
+          animateSection(section);
+        }
+      });
+    }
+
+    window.addEventListener('scroll', handleScrollAnimation);
+    window.addEventListener('load', () => {
+      handleScrollAnimation();
+    });
+
+    // Navigation menu mobile toggle
+    const menuToggle = select('#menuToggle');
+    const navMenu = select('#navMenu');
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+      if(navMenu.classList.contains('open')){
+        navMenu.querySelectorAll('a').forEach((a,i) => a.tabIndex = 0);
+      } else {
+        navMenu.querySelectorAll('a').forEach((a,i) => a.tabIndex = -1);
       }
     });
-  </script>
 
+    // Dark/light theme toggle
+    const themeToggle = select('#themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme');
+      if(currentTheme === 'dark'){
+        document.body.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '🌑';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '🌗';
+      }
+    });
+
+    // HERO ENTER VAULT BUTTON
+    const enterVaultBtn = select('#enterVault');
+    enterVaultBtn.addEventListener('click', () => {
+      document.querySelector('#games').scrollIntoView({behavior: 'smooth'});
+      navMenu.classList.remove('open');
+    });
+
+    // GAME CARDS interaction - open modal with details
+    const modal = select('#modal');
+    const modalTitle = select('#modalTitle');
+    const modalContent = select('#modalContent');
+    const closeModalBtn = select('.close-modal');
+
+    const gameData = {
+      'diagnosis-duel': {
+        title: "Diagnosis Duel",
+        content: `
+          <strong>Description:</strong> Compete in a 1v1 match where both players receive the same case. The faster and more accurate diagnostician wins.<br><br>
+          <strong>Mechanics:</strong> You get patient data, symptoms, and tests. Choose diagnostics and treatments carefully.<br><br>
+          <strong>Ranks:</strong> Bronze → Silver → Gold → Platinum Medic<br><br>
+          <strong>Tip:</strong> Speed and precision are key. Review patient history carefully and use differential diagnosis logic.
+        `
+      },
+      'er-escape': {
+        title: "ER Escape Room",
+        content: `
+          <strong>Description:</strong> Immerse yourself in a chaotic emergency room. You must stabilize patients and make quick decisions to escape alive.<br><br>
+          <strong>Challenges:</strong> Multiple emergencies happen simultaneously; triage, prioritize, and treat in real time.<br><br>
+          <strong>Goal:</strong> Escape the ER within the time limit.<br><br>
+          <strong>Tip:</strong> Stay calm and don't forget basic emergency protocols.
+        `
+      },
+      'anatomy-puzzle': {
+        title: "Anatomy Puzzle",
+        content: `
+          <strong>Description:</strong> Piece together organ systems and understand anatomy by solving interactive puzzles.<br><br>
+          <strong>Features:</strong> Drag and drop organs, learn detailed facts, and quiz yourself.<br><br>
+          <strong>Goal:</strong> Master human anatomy and earn badges.<br><br>
+          <strong>Tip:</strong> Use the Anatomy Explorer to study before playing.
+        `
+      },
+      'case-creator': {
+        title: "Case Creator",
+        content: `
+          <strong>Description:</strong> Build your own medical mystery case! Add symptoms, tests, branching logic, and possible outcomes.<br><br>
+          <strong>Features:</strong> Share your cases and challenge friends.<br><br>
+          <strong>Tip:</strong> Think like a diagnostician; make clues clear but challenging.
+        `
+      }
+    };
+
+    selectAll('.game-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const gameKey = card.dataset.game;
+        if(gameData[gameKey]){
+          modalTitle.innerHTML = gameData[gameKey].title;
+          modalContent.innerHTML = gameData[gameKey].content;
+          openModal();
+        }
+      });
+      card.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+
+    // Modal open/close
+    function openModal(){
+      modal.classList.add('active');
+      modal.focus();
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(){
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => {
+      if(e.target === modal){
+        closeModal();
+      }
+    });
+    window.addEventListener('keydown', e => {
+      if(e.key === 'Escape' && modal.classList.contains('active')){
+        closeModal();
+      }
+    });
+
+    // Helper for selecting all elements
+    function selectAll(selector){
+      return [...document.querySelectorAll(selector)];
+    }
+
+    // Anatomy Explorer functionality
+    const organData = {
+      heart: {
+        name: 'Heart',
+        description: 'The heart pumps oxygenated blood throughout the body. Common diseases include myocardial infarction, arrhythmias, and heart failure.'
+      },
+      lungs: {
+        name: 'Lungs',
+        description: 'The lungs enable gas exchange, providing oxygen and removing carbon dioxide. Conditions include pneumonia, asthma, and COPD.'
+      },
+      liver: {
+        name: 'Liver',
+        description: 'The liver detoxifies blood, produces bile, and stores glycogen. Diseases include hepatitis, cirrhosis, and liver cancer.'
+      },
+      stomach: {
+        name: 'Stomach',
+        description: 'The stomach aids digestion by breaking down food with acid and enzymes. Issues include gastritis, ulcers, and cancer.'
+      },
+      brain: {
+        name: 'Brain',
+        description: 'The brain controls body functions and cognition. Neurological disorders include stroke, epilepsy, and Alzheimer’s disease.'
+      }
+    };
+    selectAll('.organ').forEach(organEl => {
+      organEl.addEventListener('click', () => {
+        const id = organEl.id;
+        if(organData[id]){
+          modalTitle.textContent = organData[id].name;
+          modalContent.textContent = organData[id].description;
+          openModal();
+        }
+      });
+      organEl.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          organEl.click();
+        }
+      });
+    });
+
+    // Evidence Scanner drag-drop and click to upload
+    const scannerBox = select('#scannerBox');
+    const fileInput = select('#fileInput');
+    const scanResult = select('#scanResult');
+
+    scannerBox.addEventListener('dragover', e => {
+      e.preventDefault();
+      scannerBox.classList.add('dragover');
+    });
+    scannerBox.addEventListener('dragleave', e => {
+      scannerBox.classList.remove('dragover');
+    });
+    scannerBox.addEventListener('drop', e => {
+      e.preventDefault();
+      scannerBox.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    scannerBox.addEventListener('click', () => {
+      fileInput.click();
+    });
+    fileInput.addEventListener('change', e => {
+      handleFiles(fileInput.files);
+    });
+
+    function handleFiles(files){
+      if(files.length === 0) return;
+      scanResult.textContent = `Scanning ${files.length} file(s)... 🩺`;
+      setTimeout(() => {
+        scanResult.textContent = "File scanned. 🩺 Suggestion: Possible pneumonia.";
+      }, 1500);
+    }
+
+    // Case Report Generator
+    const reportForm = select('#reportForm');
+    const reportArea = select('#reportArea');
+
+    reportForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const patientName = reportForm.patientName.value.trim();
+      const caseSummary = reportForm.caseSummary.value.trim();
+      const diagnosis = reportForm.diagnosis.value.trim();
+      const recommendations = reportForm.recommendations.value.trim();
+      if(!patientName || !caseSummary || !diagnosis) return;
+
+      const timestamp = new Date().toLocaleString();
+      const badge = "🩺 MEDU Medic";
+      const rank = "Silver";
+
+      const reportHTML = `
+        <div role="region" aria-label="Generated Case Report">
+          <h3>Case Report for <strong>${patientName}</strong></h3>
+          <p><strong>Badge:</strong> ${badge}</p>
+          <p><strong>Rank:</strong> ${rank}</p>
+          <p><strong>Date:</strong> ${timestamp}</p>
+          <hr style="margin:1em 0; border-color: var(--cyan);"/>
+          <h4>Summary</h4>
+          <p>${caseSummary}</p>
+          <h4>Diagnosis</h4>
+          <p>${diagnosis}</p>
+          <h4>Recommendations</h4>
+          <p>${recommendations || 'N/A'}</p>
+          <button id="printReport" aria-label="Print case report">Print Report</button>
+        </div>
+      `;
+      reportArea.innerHTML = reportHTML;
+
+      // Print button listener
+      select('#printReport').addEventListener('click', () => {
+        const printContents = reportArea.innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+      });
+
+      reportForm.reset();
+    });
+
+    // Leaderboard dynamic data
+    const leaderboardBody = select('#leaderboardBody');
+    const leaderboardEntries = [
+      {rank: "Platinum Medic", player: "DrApex", game: "Diagnosis Duel", score: 9200, level: 45},
+      {rank: "Gold Medic", player: "MedicNova", game: "ER Escape Room", score: 8600, level: 38},
+      {rank: "Silver Medic", player: "AnatomyAce", game: "Anatomy Puzzle", score: 7100, level: 33},
+      {rank: "Bronze Medic", player: "CaseBuilder", game: "Case Creator", score: 5600, level: 27},
+      {rank: "Gold Medic", player: "SurgeonX", game: "Diagnosis Duel", score: 8000, level: 36}
+    ];
+
+    function renderLeaderboard(){
+      leaderboardBody.innerHTML = "";
+      leaderboardEntries.forEach(entry => {
+        let rankClass = "";
+        switch(entry.rank.toLowerCase()){
+          case "bronze medic": rankClass = "rank-bronze"; break;
+          case "silver medic": rankClass = "rank-silver"; break;
+          case "gold medic": rankClass = "rank-gold"; break;
+          case "platinum medic": rankClass = "rank-platinum"; break;
+          default: rankClass = "";
+        }
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="${rankClass}">${entry.rank}</td>
+          <td>${entry.player}</td>
+          <td>${entry.game}</td>
+          <td>${entry.score.toLocaleString()}</td>
+          <td>${entry.level}</td>
+        `;
+        leaderboardBody.appendChild(tr);
+      });
+    }
+    renderLeaderboard();
+
+    // Admin panel case submission simulation
+    const adminSection = select('#admin');
+    const caseForm = select('#caseForm');
+    const adminMsg = select('#adminMsg');
+
+    function checkAdminMode() {
+      const params = new URLSearchParams(window.location.search);
+      if(params.get('admin') === 'true'){
+        // Show admin panel menu item and section
+        navMenu.querySelector('li:nth-child(6)').classList.remove('hidden');
+        caseForm.querySelector('button').disabled = false;
+        adminSection.scrollIntoView({behavior: 'smooth'});
+      } else {
+        // Hide admin panel menu item and section from tabbing
+        navMenu.querySelector('li:nth-child(6)').classList.add('hidden');
+        caseForm.querySelector('button').disabled = true;
+      }
+    }
+    checkAdminMode();
+
+    caseForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = caseForm.caseName.value.trim();
+      const desc = caseForm.caseDesc.value.trim();
+      const type = caseForm.caseType.value;
+      if(!name || !desc || !type){
+        adminMsg.textContent = "Please fill all fields.";
+        adminMsg.style.color = "#ff6b6b";
+        return;
+      }
+      // Simulate adding case (in real app this would post to backend)
+      adminMsg.textContent = `Case "${name}" added to ${type.replace(/-/g,' ')} games. (Simulation)`;
+      adminMsg.style.color = "#00ffea";
+      caseForm.reset();
+      setTimeout(() => { adminMsg.textContent = ''; }, 5000);
+    });
+
+  })();
+</script>
 </body>
 </html>
