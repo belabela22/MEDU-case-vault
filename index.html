@@ -1,1314 +1,1417 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MEDU Case Vault - Interactive Simulation</title>
-<style>
-  /* ========== CSS VARIABLES ========== */
-  :root {
-    --blue: #0d3b66;
-    --cyan: #00fff7;
-    --light-blue: #4dd0e1;
-    --dark-blue: #031d33;
-    --bg-dark: #0b1a2b;
-    --bg-light: #f0f8ff;
-    --text-light: #e0f7fa;
-    --text-dark: #102a43;
-    --shadow-color: rgba(0, 255, 247, 0.6);
-    --radius: 10px;
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  [data-theme="light"] {
-    --bg-dark: var(--bg-light);
-    --text-light: var(--text-dark);
-    --shadow-color: rgba(0, 255, 247, 0.3);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MEDU Case Vault | SWM Medical Education</title>
+  <style>
+    /*
+      MEDU Case Vault
+      Author: Luna.C.Everly | Medical Education Overseer
+      Theme: Medical, high-tech, immersive UI with blue shades and smooth gradients.
+      Fully responsive, modern, gamified UI/UX.
+    */
 
-  /* ========== RESET & BASE ========== */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0; font-family: var(--font-family);
-    background: var(--bg-dark);
-    color: var(--text-light);
-    transition: background 0.4s ease, color 0.4s ease;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  h1,h2,h3,h4 {
-    margin: 0 0 0.5rem 0;
-  }
-  p {
-    margin: 0.3rem 0 1rem 0;
-  }
-  button {
-    background: var(--cyan);
-    border: none;
-    padding: 0.6em 1.2em;
-    font-size: 1rem;
-    color: var(--dark-blue);
-    border-radius: var(--radius);
-    cursor: pointer;
-    box-shadow: 0 0 6px var(--shadow-color);
-    transition: background 0.3s ease;
-  }
-  button:hover, button:focus {
-    background: var(--light-blue);
-    outline: none;
-  }
-  input, select, textarea {
-    font-family: var(--font-family);
-    padding: 0.5em;
-    font-size: 1rem;
-    border-radius: var(--radius);
-    border: 2px solid var(--cyan);
-    background: transparent;
-    color: var(--text-light);
-    margin-bottom: 1rem;
-    width: 100%;
-    transition: border-color 0.3s ease;
-  }
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--light-blue);
-  }
-  textarea {
-    resize: vertical;
-  }
-  a {
-    color: var(--cyan);
-    text-decoration: none;
-  }
-  a:hover, a:focus {
-    text-decoration: underline;
-  }
-  main {
-    flex: 1;
-    max-width: 1080px;
-    margin: auto;
-    padding: 1rem;
-  }
-
-  /* ========== NAVIGATION ========== */
-  nav {
-    background: var(--blue);
-    color: var(--text-light);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    box-shadow: 0 2px 10px rgba(0,255,247,0.25);
-  }
-  nav .logo {
-    font-weight: 700;
-    font-size: 1.5rem;
-    user-select: none;
-  }
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-  }
-  nav ul li a {
-    color: var(--text-light);
-    font-weight: 600;
-    padding: 0.3rem 0.6rem;
-    border-radius: var(--radius);
-    user-select: none;
-  }
-  nav ul li a:hover, nav ul li a:focus {
-    background: var(--cyan);
-    color: var(--dark-blue);
-    outline: none;
-  }
-  nav button#themeToggle, nav button#menuToggle {
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-light);
-    cursor: pointer;
-    user-select: none;
-    padding: 0 0.5rem;
-  }
-  nav button#themeToggle:hover, nav button#menuToggle:hover,
-  nav button#themeToggle:focus, nav button#menuToggle:focus {
-    color: var(--cyan);
-    outline: none;
-  }
-  /* Mobile nav toggle */
-  @media (max-width: 768px) {
-    nav ul {
-      display: none;
-      flex-direction: column;
-      background: var(--blue);
-      position: fixed;
-      top: 60px;
-      right: 0;
-      width: 220px;
-      border-radius: 0 0 0 var(--radius);
-      box-shadow: 0 0 15px var(--shadow-color);
-      padding: 1rem;
-      height: calc(100% - 60px);
-      overflow-y: auto;
+    /* CSS Variables */
+    :root {
+      --primary-dark: #0d1b2a;
+      --primary-light: #1b2e4b;
+      --accent-blue: #3a9bff;
+      --accent-blue-light: #61b7ff;
+      --background-light: #e9f0ff;
+      --background-dark: #071322;
+      --text-light: #eef3f9;
+      --text-dark: #1b2e4b;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --transition-speed: 0.3s;
+      --shadow-glow: 0 0 10px var(--accent-blue-light);
+      --border-radius: 10px;
     }
-    nav ul.open {
+
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font-primary);
+      background: var(--primary-dark);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+    a:hover {
+      color: var(--accent-blue-light);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--primary-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-blue);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-blue-light);
+    }
+
+    /* Container */
+    #app {
       display: flex;
+      flex-direction: row;
+      height: 100vh;
+      overflow: hidden;
     }
-    nav button#menuToggle {
-      display: inline-block;
+
+    /* Sidebar Navigation */
+    nav.sidebar {
+      width: 280px;
+      background: var(--primary-light);
+      padding: 2rem 1.5rem;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
     }
-  }
-  @media (min-width: 769px) {
-    nav button#menuToggle {
-      display: none;
+
+    nav.sidebar.hide {
+      transform: translateX(-100%);
     }
-  }
 
-  /* ========== HERO ========== */
-  .hero {
-    text-align: center;
-    margin: 3rem 0 2rem 0;
-  }
-  .hero h1 {
-    font-size: 3rem;
-    letter-spacing: 0.1em;
-    text-shadow: 0 0 10px var(--cyan);
-  }
-  .hero p.subtitle {
-    font-style: italic;
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-    color: var(--light-blue);
-  }
-  .hero p.author {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 2rem;
-  }
-  .hero button#enterVault {
-    font-size: 1.3rem;
-    padding: 1em 2em;
-    font-weight: 700;
-    box-shadow: 0 0 15px var(--cyan);
-  }
+    nav.sidebar h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      text-align: center;
+      user-select: text;
+      letter-spacing: 0.05em;
+    }
 
-  /* ========== SECTIONS ========== */
-  section {
-    margin-bottom: 3rem;
-    padding: 1rem;
-    background: var(--dark-blue);
-    border-radius: var(--radius);
-    box-shadow: 0 0 10px var(--shadow-color);
-    transition: transform 0.3s ease, opacity 0.4s ease;
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  section.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  section h2 {
-    font-size: 2rem;
-    border-bottom: 2px solid var(--cyan);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-    user-select: none;
-  }
-  .intro {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
+    nav.sidebar .author {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--accent-blue-light);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
 
-  /* ========== GAME CARDS ========== */
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-    gap: 1.25rem;
-  }
-  .game-card {
-    background: var(--blue);
-    border-radius: var(--radius);
-    padding: 1rem;
-    box-shadow: 0 0 10px var(--shadow-color);
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.25s ease, transform 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .game-card:hover, .game-card:focus {
-    background: var(--cyan);
-    color: var(--dark-blue);
-    outline: none;
-    transform: scale(1.05);
-  }
-  .game-card .icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    user-select: none;
-  }
-  .game-card h3 {
-    margin-bottom: 0.5rem;
-  }
+    nav.sidebar ul {
+      list-style: none;
+      flex-grow: 1;
+    }
 
-  /* ========== MODAL ========== */
-  .modal-bg {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 10000;
-  }
-  .modal-bg.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .modal {
-    background: var(--dark-blue);
-    padding: 2rem;
-    border-radius: var(--radius);
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 0 20px var(--cyan);
-    position: relative;
-    user-select: text;
-  }
-  .modal button.close-modal {
-    position: absolute;
-    top: 1rem; right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: var(--cyan);
-    cursor: pointer;
-    user-select: none;
-    font-weight: 700;
-  }
-  .modal button.close-modal:hover, .modal button.close-modal:focus {
-    color: var(--light-blue);
-    outline: none;
-  }
+    nav.sidebar ul li {
+      margin-bottom: 1rem;
+    }
 
-  /* ========== ANATOMY EXPLORER ========== */
-  .anatomy-map {
-    text-align: center;
-  }
-  .anatomy-map svg {
-    max-width: 350px;
-    height: auto;
-    user-select: none;
-    filter: drop-shadow(0 0 6px var(--cyan));
-  }
-  .organ {
-    fill: var(--cyan);
-    opacity: 0.6;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-    stroke: var(--light-blue);
-    stroke-width: 2px;
-  }
-  .organ:hover, .organ:focus {
-    opacity: 1;
-    outline: none;
-  }
+    nav.sidebar ul li a {
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      color: var(--text-light);
+      padding: 0.75rem 1rem;
+      border-radius: var(--border-radius);
+      transition: background var(--transition-speed);
+      cursor: pointer;
+      user-select: text;
+    }
 
-  /* ========== SCANNER ========== */
-  #scannerBox {
-    border: 2px dashed var(--cyan);
-    border-radius: var(--radius);
-    height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1.1rem;
-    user-select: none;
-    color: var(--cyan);
-    position: relative;
-  }
-  #scannerBox.dragover {
-    background: var(--cyan);
-    color: var(--dark-blue);
-  }
+    nav.sidebar ul li a span.icon {
+      margin-right: 1rem;
+      font-size: 1.4rem;
+      width: 28px;
+      text-align: center;
+    }
 
-  /* ========== CASE REPORT GENERATOR ========== */
-  form label {
-    font-weight: 700;
-  }
-  #reportArea {
-    margin-top: 1rem;
-    background: var(--blue);
-    padding: 1rem;
-    border-radius: var(--radius);
-    box-shadow: 0 0 15px var(--shadow-color);
-  }
-  #reportArea h3 {
-    margin-top: 0;
-  }
-  #reportArea button#printReport {
-    margin-top: 1rem;
-  }
+    nav.sidebar ul li a:hover,
+    nav.sidebar ul li a.active {
+      background: var(--accent-blue);
+      box-shadow: var(--shadow-glow);
+      color: var(--text-light);
+    }
 
-  /* ========== LEADERBOARD ========== */
-  .leaderboard table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .leaderboard th, .leaderboard td {
-    text-align: left;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--cyan);
-  }
-  .leaderboard tbody tr:hover {
-    background: var(--cyan);
-    color: var(--dark-blue);
-    cursor: default;
-  }
-  .rank-bronze {
-    color: #cd7f32;
-    font-weight: 700;
-  }
-  .rank-silver {
-    color: #c0c0c0;
-    font-weight: 700;
-  }
-  .rank-gold {
-    color: #ffd700;
-    font-weight: 700;
-  }
+    nav.sidebar .toggle-btn {
+      position: absolute;
+      top: 1rem;
+      right: -2.5rem;
+      background: var(--primary-light);
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--accent-blue);
+      transition: background var(--transition-speed);
+      user-select: none;
+    }
 
-  /* ========== ADMIN PANEL ========== */
-  #admin {
-    background: #06172d;
-  }
-  #admin .admin-panel {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-  }
-  #admin form {
-    background: var(--blue);
-    padding: 1rem;
-    border-radius: var(--radius);
-    box-shadow: 0 0 10px var(--shadow-color);
-    flex: 1 1 300px;
-    min-width: 280px;
-  }
-  #admin form button {
-    width: 100%;
-  }
-  #adminMsg {
-    flex-basis: 100%;
-    font-weight: 700;
-    text-align: center;
-  }
-  #adminMembersList {
-    background: var(--blue);
-    padding: 1rem;
-    border-radius: var(--radius);
-    box-shadow: 0 0 10px var(--shadow-color);
-    flex: 1 1 300px;
-    min-width: 280px;
-    max-height: 320px;
-    overflow-y: auto;
-  }
-  #adminMembersList h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-  }
-  #adminMembersList ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  #adminMembersList li {
-    margin: 0.2rem 0;
-    padding: 0.4rem 0.6rem;
-    background: var(--dark-blue);
-    border-radius: var(--radius);
-  }
-  /* ========== LOGIN MODAL ========== */
-  #loginModal .modal {
-    max-width: 400px;
-  }
-  #loginModal label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-  }
-  #loginModal input[type="text"] {
-    width: 100%;
-  }
+    nav.sidebar .toggle-btn:hover {
+      background: var(--accent-blue);
+    }
 
-  /* ========== GAME SECTIONS ========== */
-  .game-section {
-    display: none;
-  }
-  .game-section.active {
-    display: block;
-  }
+    /* Main Content Area */
+    main.content-area {
+      flex-grow: 1;
+      background: var(--background-dark);
+      color: var(--text-light);
+      padding: 2rem 3rem;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* ========== MESSAGES ========== */
-  .message {
-    margin-top: 0.5rem;
-    font-weight: 700;
-    color: var(--cyan);
-  }
-</style>
+    main.content-area h2.section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 1rem;
+      user-select: text;
+      text-shadow: 0 0 8px var(--accent-blue-light);
+    }
+
+    main.content-area h3.sub-title {
+      font-size: 1.8rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent-blue-light);
+      user-select: text;
+    }
+
+    main.content-area p,
+    main.content-area li {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: #d8e3f0;
+      user-select: text;
+    }
+
+    main.content-area ul {
+      padding-left: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Buttons */
+    button {
+      background: var(--accent-blue);
+      color: var(--text-light);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--accent-blue-light);
+      transition: background var(--transition-speed), box-shadow var(--transition-speed);
+      user-select: none;
+    }
+    button:hover {
+      background: var(--accent-blue-light);
+      box-shadow: 0 0 12px var(--accent-blue);
+    }
+
+    /* Cards and Boxes */
+    .card {
+      background: var(--primary-light);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 12px rgba(0,0,0,0.7);
+      user-select: text;
+      transition: box-shadow var(--transition-speed);
+    }
+    .card:hover {
+      box-shadow: 0 0 20px var(--accent-blue-light);
+    }
+
+    /* Highlighted Callout Boxes */
+    .callout {
+      border-left: 5px solid var(--accent-blue);
+      background: rgba(58, 155, 255, 0.15);
+      padding: 1rem 1.5rem;
+      margin: 1rem 0 2rem 0;
+      border-radius: var(--border-radius);
+      font-style: italic;
+      color: #c6d9ff;
+      user-select: text;
+      box-shadow: inset 0 0 10px var(--accent-blue-light);
+      transition: background var(--transition-speed);
+    }
+    .callout.warning {
+      border-left-color: var(--danger);
+      background: rgba(220, 53, 69, 0.15);
+      color: #f9a3a6;
+      box-shadow: inset 0 0 10px var(--danger);
+    }
+
+    /* Section Dividers */
+    .divider {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-light));
+      margin: 3rem 0;
+      border-radius: 3px;
+      box-shadow: 0 0 10px var(--accent-blue-light);
+    }
+
+    /* Leaderboard Table */
+    table.leaderboard {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    table.leaderboard th, table.leaderboard td {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--accent-blue);
+      text-align: center;
+      color: var(--text-light);
+      user-select: text;
+    }
+    table.leaderboard th {
+      background: var(--accent-blue);
+      text-shadow: 0 0 5px var(--accent-blue-light);
+      font-weight: 700;
+    }
+    table.leaderboard tr:nth-child(even) {
+      background: rgba(58, 155, 255, 0.15);
+    }
+
+    /* Forms */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+    }
+    form label {
+      font-weight: 600;
+      color: var(--accent-blue-light);
+      user-select: text;
+    }
+    form input[type="text"],
+    form input[type="password"],
+    form select,
+    form textarea {
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      border: 2px solid var(--accent-blue);
+      font-size: 1rem;
+      color: var(--primary-dark);
+      transition: border-color var(--transition-speed);
+    }
+    form input[type="text"]:focus,
+    form input[type="password"]:focus,
+    form select:focus,
+    form textarea:focus {
+      outline: none;
+      border-color: var(--accent-blue-light);
+      box-shadow: 0 0 8px var(--accent-blue-light);
+      background: #fff;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Modal Content */
+    .modal {
+      background: var(--primary-light);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 0 25px var(--accent-blue-light);
+      position: relative;
+    }
+
+    .modal h3 {
+      margin-bottom: 1rem;
+      color: var(--accent-blue);
+    }
+
+    .modal .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      color: var(--accent-blue-light);
+      cursor: pointer;
+      transition: color 0.3s ease;
+      user-select: none;
+    }
+    .modal .close-btn:hover {
+      color: var(--accent-blue);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      nav.sidebar {
+        position: fixed;
+        z-index: 1500;
+        height: 100%;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+      }
+      nav.sidebar.show {
+        transform: translateX(0);
+      }
+      #app {
+        flex-direction: column;
+      }
+      main.content-area {
+        padding: 1rem 1.5rem;
+        overflow-y: visible;
+      }
+      nav.sidebar .toggle-btn {
+        top: 1rem;
+        right: 1rem;
+      }
+    }
+
+    /* Animation for content fade */
+    .fade-in {
+      animation: fadeIn ease 0.5s;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+    }
+    @keyframes fadeIn {
+      0% {opacity: 0;}
+      100% {opacity: 1;}
+    }
+
+    /* Glow pulse for medals */
+    .medal-bronze {
+      color: #cd7f32;
+      text-shadow: 0 0 8px #cd7f32aa;
+      animation: pulseGlow 3s infinite alternate;
+    }
+    .medal-silver {
+      color: #c0c0c0;
+      text-shadow: 0 0 10px #c0c0c0aa;
+      animation: pulseGlow 2.5s infinite alternate;
+    }
+    .medal-gold {
+      color: #ffd700;
+      text-shadow: 0 0 14px #ffd700cc;
+      animation: pulseGlow 2s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { text-shadow: 0 0 6px currentColor; }
+      100% { text-shadow: 0 0 18px currentColor; }
+    }
+
+    /* Tooltip */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+    [data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      white-space: nowrap;
+      top: -2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-blue);
+      color: var(--text-light);
+      padding: 0.3rem 0.6rem;
+      border-radius: var(--border-radius);
+      font-size: 0.85rem;
+      box-shadow: 0 0 8px var(--accent-blue-light);
+      pointer-events: none;
+      user-select: none;
+      z-index: 10;
+    }
+  </style>
 </head>
-<body data-theme="dark">
+<body>
+  <div id="app">
 
-<nav>
-  <div class="logo" tabindex="0">MEDU Case Vault</div>
-  <ul id="navMenu" role="menubar" aria-label="Main Navigation">
-    <li><a href="#hero" tabindex="0" id="nav-home">Home</a></li>
-    <li><a href="#games" tabindex="-1" id="nav-games">Games</a></li>
-    <li><a href="#anatomy" tabindex="-1" id="nav-anatomy">Anatomy Explorer</a></li>
-    <li><a href="#scanner" tabindex="-1" id="nav-scanner">Evidence Scanner</a></li>
-    <li><a href="#report" tabindex="-1" id="nav-report">Case Reports</a></li>
-    <li><a href="#leaderboard" tabindex="-1" id="nav-leaderboard">Leaderboard</a></li>
-    <li><a href="#admin" tabindex="-1" id="nav-admin" class="hidden" aria-hidden="true">Admin Tools</a></li>
-  </ul>
-  <button id="themeToggle" aria-label="Toggle Dark/Light Mode" title="Toggle Dark/Light Mode">🌗</button>
-  <button id="menuToggle" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu">☰</button>
-</nav>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+      <h1>MEDU Case Vault</h1>
+      <div class="author">By Luna.C.Everly | Medical Education Overseer 📘</div>
 
-<main>
+      <ul>
+        <li><a href="#" data-section="home" class="nav-link active"><span class="icon">🏠</span>Home</a></li>
+        <li><a href="#" data-section="games" class="nav-link"><span class="icon">🎮</span>Games</a></li>
+        <li><a href="#" data-section="shadowcases" class="nav-link"><span class="icon">🕵️‍♂️</span>Shadow Cases</a></li>
+        <li><a href="#" data-section="anatomy" class="nav-link"><span class="icon">🧬</span>Anatomy Explorer</a></li>
+        <li><a href="#" data-section="leaderboard" class="nav-link"><span class="icon">🏅</span>Leaderboard</a></li>
+        <li><a href="#" data-section="archives" class="nav-link"><span class="icon">📜</span>Archives</a></li>
+        <li><a href="#" data-section="admintools" class="nav-link" id="admin-tools-link" style="display:none;"><span class="icon">🔧</span>Admin Tools</a></li>
+        <li><a href="#" data-section="about" class="nav-link"><span class="icon">ℹ️</span>About</a></li>
+      </ul>
 
-  <!-- HERO -->
-  <section class="hero visible" id="hero" tabindex="0" aria-label="Welcome Banner">
-    <h1>MEDU Case Vault</h1>
-    <p class="subtitle">Where Medicine Meets Mystery</p>
-    <p class="author">By Luna.C.Everly | Medical Education Overseer</p>
-    <button id="enterVault" aria-label="Enter the case vault">Enter Vault</button>
-  </section>
+      <button class="toggle-btn" id="sidebarToggle" title="Toggle Sidebar">☰</button>
 
-  <!-- LOGIN MODAL -->
-  <div id="loginModal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="loginTitle" tabindex="-1">
-    <div class="modal" role="document" aria-describedby="loginDesc">
-      <button class="close-modal" aria-label="Close login modal">×</button>
-      <h3 id="loginTitle">Player Login</h3>
-      <p id="loginDesc">Please enter your player name to continue.</p>
-      <form id="loginForm">
-        <label for="playerNameInput">Player Name:</label>
-        <input type="text" id="playerNameInput" name="playerNameInput" autocomplete="off" minlength="2" maxlength="20" required placeholder="e.g. Dr. Jane" />
-        <button type="submit">Enter</button>
-      </form>
-      <p id="loginError" class="message" aria-live="assertive"></p>
-    </div>
+      <div style="margin-top:auto; padding-top:1rem; border-top: 1px solid var(--accent-blue); text-align:center;">
+        <button id="darkModeToggle" title="Toggle Dark/Light Mode">🌙</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content-area" id="mainContent">
+      <!-- Dynamic content injected here -->
+    </main>
+
   </div>
 
-  <!-- GAMES -->
-  <section id="games" tabindex="0" aria-label="Games Section">
-    <h2>🔬 MEDU Games Collection</h2>
-    <p class="intro">Choose a game mode below to train your medical skills and challenge your mind.</p>
-    <div class="games-grid">
-      <div class="game-card" data-game="diagnosis-duel" tabindex="0" role="button" aria-pressed="false" aria-label="Play Diagnosis Duel Game">
-        <div class="icon">🧠</div>
-        <h3>Diagnosis Duel</h3>
-        <p>1v1 Competitive clinical case solving challenge.</p>
-      </div>
-      <div class="game-card" data-game="er-escape" tabindex="0" role="button" aria-pressed="false" aria-label="Play ER Escape Room Game">
-        <div class="icon">🚨</div>
-        <h3>ER Escape Room</h3>
-        <p>Navigate emergency scenarios and escape under pressure.</p>
-      </div>
-      <div class="game-card" data-game="anatomy-puzzle" tabindex="0" role="button" aria-pressed="false" aria-label="Play Anatomy Puzzle Match">
-        <div class="icon">🧪</div>
-        <h3>Anatomy Puzzle Match</h3>
-        <p>Match organs and systems in timed puzzles.</p>
-      </div>
-      <div class="game-card" data-game="case-creator" tabindex="0" role="button" aria-pressed="false" aria-label="Play Case Creator Game">
-        <div class="icon">📄</div>
-        <h3>Case Creator</h3>
-        <p>Create your own clinical cases for others to solve.</p>
-      </div>
+  <!-- Modals -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+      <button class="close-btn" id="modalCloseBtn" aria-label="Close modal">×</button>
+      <div id="modalContent"></div>
     </div>
-  </section>
-
-  <!-- GAME PLAY SECTIONS -->
-  <!-- Diagnosis Duel -->
-  <section id="diagnosis-duel" class="game-section" tabindex="0" aria-label="Diagnosis Duel Game">
-    <h2>🧠 Diagnosis Duel</h2>
-    <p>Play head-to-head clinical case solving. (Single player simulation)</p>
-    <div id="duelArea"></div>
-    <button id="duelQuitBtn">Quit Game</button>
-  </section>
-
-  <!-- ER Escape Room -->
-  <section id="er-escape" class="game-section" tabindex="0" aria-label="ER Escape Room Game">
-    <h2>🚨 ER Escape Room</h2>
-    <p>Navigate the emergency room and solve challenges to escape.</p>
-    <div id="erRoomArea"></div>
-    <button id="erQuitBtn">Quit Game</button>
-  </section>
-
-  <!-- Anatomy Puzzle Match -->
-  <section id="anatomy-puzzle" class="game-section" tabindex="0" aria-label="Anatomy Puzzle Match Game">
-    <h2>🧪 Anatomy Puzzle Match</h2>
-    <p>Match the correct organs and body systems to score points.</p>
-    <div id="anatomyPuzzleArea"></div>
-    <button id="anatomyQuitBtn">Quit Game</button>
-  </section>
-
-  <!-- Case Creator -->
-  <section id="case-creator" class="game-section" tabindex="0" aria-label="Case Creator Game">
-    <h2>📄 Case Creator</h2>
-    <p>Create clinical cases for others to solve. Admin only.</p>
-    <div id="caseCreatorArea"></div>
-    <button id="caseCreatorQuitBtn">Quit Game</button>
-  </section>
-
-  <!-- ANATOMY EXPLORER -->
-  <section id="anatomy" tabindex="0" aria-label="Anatomy Explorer Section">
-    <h2>🫀 Anatomy Explorer</h2>
-    <p>Hover or click organs for detailed info and case links.</p>
-    <div class="anatomy-map" role="img" aria-label="Human Anatomy Map">
-      <svg viewBox="0 0 300 400" role="img" aria-labelledby="anatomyTitle" tabindex="0" >
-        <title id="anatomyTitle">Human Anatomy Simplified Map</title>
-        <!-- Organs as clickable paths -->
-        <rect x="120" y="50" width="60" height="90" class="organ" id="heart" tabindex="0" aria-label="Heart organ" />
-        <rect x="110" y="150" width="80" height="100" class="organ" id="lungs" tabindex="0" aria-label="Lungs organ" />
-        <rect x="130" y="260" width="40" height="70" class="organ" id="liver" tabindex="0" aria-label="Liver organ" />
-      </svg>
-    </div>
-  </section>
-
-  <!-- EVIDENCE SCANNER -->
-  <section id="scanner" tabindex="0" aria-label="Evidence Scanner Section">
-    <h2>🧾 Evidence Scanner</h2>
-    <p>Drag and drop medical files here or click to upload for scanning simulation.</p>
-    <div id="scannerBox" tabindex="0" aria-label="File drag and drop zone">Drop files here or click to upload</div>
-    <input type="file" id="fileInput" multiple hidden aria-hidden="true" />
-    <p id="scanResult" role="alert" aria-live="polite"></p>
-  </section>
-
-  <!-- CASE REPORT GENERATOR -->
-  <section id="report" tabindex="0" aria-label="Case Report Generator Section">
-    <h2>📋 Case Report Generator</h2>
-    <form id="reportForm" aria-describedby="reportHelp">
-      <label for="patientName">Patient Name:</label>
-      <input id="patientName" name="patientName" type="text" required placeholder="John Doe" autocomplete="off" />
-      <label for="caseSummary">Case Summary:</label>
-      <textarea id="caseSummary" name="caseSummary" rows="3" required placeholder="Brief summary"></textarea>
-      <label for="diagnosis">Diagnosis:</label>
-      <textarea id="diagnosis" name="diagnosis" rows="2" required placeholder="Final diagnosis"></textarea>
-      <label for="recommendations">Recommendations:</label>
-      <textarea id="recommendations" name="recommendations" rows="2" placeholder="Optional"></textarea>
-      <button type="submit">Generate Report</button>
-    </form>
-    <div id="reportArea" aria-live="polite"></div>
-  </section>
-
-  <!-- LEADERBOARD -->
-  <section id="leaderboard" tabindex="0" aria-label="Leaderboard Section" class="leaderboard">
-    <h2>🏅 Leaderboard</h2>
-    <table aria-describedby="leaderboardDesc">
-      <caption id="leaderboardDesc">Top players ranked by completed cases and medals.</caption>
-      <thead>
-        <tr><th>Rank</th><th>Player</th><th>Game</th><th>Score</th><th>Medals</th></tr>
-      </thead>
-      <tbody id="leaderboardBody"></tbody>
-    </table>
-  </section>
-
-  <!-- ADMIN TOOLS -->
-  <section id="admin" tabindex="0" aria-label="Admin Tools Section" class="hidden">
-    <h2>⚙️ Admin Tools</h2>
-    <div class="admin-panel">
-
-      <!-- Admin Login -->
-      <form id="adminLoginForm" aria-describedby="adminLoginMsg">
-        <h3>Admin Login</h3>
-        <label for="adminPassword">Password:</label>
-        <input type="password" id="adminPassword" required placeholder="Enter admin password" autocomplete="off" />
-        <button type="submit">Login</button>
-        <p id="adminLoginMsg" class="message" aria-live="assertive"></p>
-      </form>
-
-      <!-- Create Case -->
-      <form id="caseForm" aria-describedby="caseFormMsg" class="hidden">
-        <h3>Create New Case</h3>
-        <label for="caseName">Case Name:</label>
-        <input type="text" id="caseName" required placeholder="Case title" autocomplete="off" />
-        <label for="caseDesc">Case Description:</label>
-        <textarea id="caseDesc" rows="3" required placeholder="Brief description"></textarea>
-        <label for="caseGame">Game Type:</label>
-        <select id="caseGame" required>
-          <option value="" disabled selected>Select game</option>
-          <option value="diagnosis-duel">Diagnosis Duel</option>
-          <option value="er-escape">ER Escape Room</option>
-          <option value="anatomy-puzzle">Anatomy Puzzle Match</option>
-          <option value="case-creator">Case Creator</option>
-        </select>
-        <button type="submit">Add Case</button>
-        <p id="caseFormMsg" class="message"></p>
-      </form>
-
-      <!-- Manage Members -->
-      <form id="memberForm" aria-describedby="memberFormMsg" class="hidden">
-        <h3>Add Member</h3>
-        <label for="memberName">Member Name:</label>
-        <input type="text" id="memberName" required placeholder="New member's name" autocomplete="off" />
-        <label for="memberMedal">Medal:</label>
-        <select id="memberMedal" required>
-          <option value="" disabled selected>Select medal</option>
-          <option value="Bronze">Bronze</option>
-          <option value="Silver">Silver</option>
-          <option value="Gold">Gold</option>
-        </select>
-        <button type="submit">Add Member</button>
-        <p id="memberFormMsg" class="message"></p>
-      </form>
-
-      <!-- Member List -->
-      <div id="adminMembersList" aria-live="polite">
-        <h3>Members List</h3>
-        <ul id="membersList"></ul>
-      </div>
-
-    </div>
-  </section>
-
-</main>
-
-<!-- MODAL FOR DETAILS -->
-<div id="detailModal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle" tabindex="-1">
-  <div class="modal" role="document">
-    <button class="close-modal" aria-label="Close detail modal">×</button>
-    <h3 id="detailModalTitle">Detail</h3>
-    <div id="detailModalContent"></div>
   </div>
-</div>
 
 <script>
-(() => {
-  "use strict";
+  (() => {
+    // Application state
+    let currentUser = null; // {username, role: 'admin'|'player', medals: {}, rank: string, completedCases: []}
+    let usersDB = {}; // Simple in-memory user database
+    let casesDB = {}; // Cases DB with details, status
+    let medals = ['bronze', 'silver', 'gold'];
+    const ranks = ['Bronze Medic', 'Silver Medic', 'Gold Medic', 'Platinum Medic'];
 
-  // Utility selectors
-  const select = s => document.querySelector(s);
-  const selectAll = s => document.querySelectorAll(s);
+    // Default initial cases (placeholders)
+    casesDB = {
+      'case1': {
+        id: 'case1',
+        title: 'Mystery Fever',
+        description: 'Patient with unknown high fever, diagnose quickly!',
+        game: 'Diagnosis Duel',
+        status: 'open',
+        createdBy: 'admin',
+        difficulty: 'easy',
+      },
+      'case2': {
+        id: 'case2',
+        title: 'ER Escape: Fire Outbreak',
+        description: 'Navigate through emergency cases in a virtual ER escape room.',
+        game: 'ER Escape Room',
+        status: 'open',
+        createdBy: 'admin',
+        difficulty: 'medium',
+      },
+      'case3': {
+        id: 'case3',
+        title: 'Anatomy Match Challenge',
+        description: 'Match organs to their functions and diagnose anatomy puzzles.',
+        game: 'Anatomy Puzzle Match',
+        status: 'open',
+        createdBy: 'admin',
+        difficulty: 'medium',
+      },
+      'case4': {
+        id: 'case4',
+        title: 'Case Creator Master',
+        description: 'Create your own medical cases and challenge others.',
+        game: 'Case Creator Game',
+        status: 'open',
+        createdBy: 'admin',
+        difficulty: 'hard',
+      },
+    };
 
-  // STATE
-  let currentPlayer = null;
-  let isAdmin = false;
-  let casesDB = []; // Cases array {id, name, description, game}
-  let membersDB = []; // Members array {name, medal}
-  let leaderboardDB = []; // Player scores {player, game, score, medals}
+    // Simulate saved user for demo
+    usersDB['admin'] = {
+      username: 'admin',
+      password: 'admin123',
+      role: 'admin',
+      medals: {bronze: 0, silver: 0, gold: 0},
+      rank: 'Platinum Medic',
+      completedCases: [],
+    };
 
-  // Store keys for localStorage
-  const LS_KEYS = {
-    players: 'medu_players',
-    cases: 'medu_cases',
-    members: 'medu_members',
-    leaderboard: 'medu_leaderboard',
-    admin: 'medu_admin',
-    currentPlayer: 'medu_currentPlayer',
-  };
+    // Elements
+    const app = document.getElementById('app');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalContent = document.getElementById('modalContent');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const adminToolsLink = document.getElementById('admin-tools-link');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const sidebarToggle = document.getElementById('sidebarToggle');
 
-  // === INIT STORAGE ===
-  function loadStorage(){
-    const savedCases = localStorage.getItem(LS_KEYS.cases);
-    const savedMembers = localStorage.getItem(LS_KEYS.members);
-    const savedLeaderboard = localStorage.getItem(LS_KEYS.leaderboard);
-    const savedAdmin = localStorage.getItem(LS_KEYS.admin);
-    const savedPlayer = localStorage.getItem(LS_KEYS.currentPlayer);
+    // State
+    let currentSection = 'home';
 
-    casesDB = savedCases ? JSON.parse(savedCases) : [];
-    membersDB = savedMembers ? JSON.parse(savedMembers) : [];
-    leaderboardDB = savedLeaderboard ? JSON.parse(savedLeaderboard) : [];
-    isAdmin = savedAdmin === 'true';
-    currentPlayer = savedPlayer ? JSON.parse(savedPlayer) : null;
-  }
-
-  function saveStorage(){
-    localStorage.setItem(LS_KEYS.cases, JSON.stringify(casesDB));
-    localStorage.setItem(LS_KEYS.members, JSON.stringify(membersDB));
-    localStorage.setItem(LS_KEYS.leaderboard, JSON.stringify(leaderboardDB));
-    localStorage.setItem(LS_KEYS.admin, isAdmin.toString());
-    localStorage.setItem(LS_KEYS.currentPlayer, JSON.stringify(currentPlayer));
-  }
-
-  // === NAVIGATION ===
-  const navMenu = select('#navMenu');
-  const menuToggle = select('#menuToggle');
-  const themeToggle = select('#themeToggle');
-  const loginModal = select('#loginModal');
-  const loginForm = select('#loginForm');
-  const loginError = select('#loginError');
-  const enterVaultBtn = select('#enterVault');
-  const navAdmin = select('#nav-admin');
-  const adminSection = select('#admin');
-
-  // Mobile nav toggle
-  menuToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('open');
-  });
-
-  // Theme toggle
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = document.body.getAttribute('data-theme');
-    if(currentTheme === 'dark'){
-      document.body.setAttribute('data-theme', 'light');
-      themeToggle.textContent = '🌙';
-    } else {
-      document.body.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '🌗';
+    // Utility Functions
+    function $(selector, scope=document) {
+      return scope.querySelector(selector);
     }
-  });
-
-  // Show login modal on enter vault
-  enterVaultBtn.addEventListener('click', () => {
-    showLoginModal();
-  });
-
-  // Show login modal function
-  function showLoginModal(){
-    loginModal.classList.add('active');
-    loginModal.setAttribute('aria-hidden', 'false');
-    loginModal.querySelector('input').focus();
-  }
-  // Hide login modal
-  function hideLoginModal(){
-    loginModal.classList.remove('active');
-    loginModal.setAttribute('aria-hidden', 'true');
-    loginError.textContent = '';
-  }
-
-  // Login form submit
-  loginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const name = loginForm.playerNameInput.value.trim();
-    if(name.length < 2){
-      loginError.textContent = 'Please enter at least 2 characters.';
-      return;
+    function $all(selector, scope=document) {
+      return Array.from(scope.querySelectorAll(selector));
     }
-    currentPlayer = { name, medal: 'Bronze', score: 0 };
-    // Save player info in leaderboard if new
-    let found = leaderboardDB.find(p => p.player === name);
-    if(!found){
-      leaderboardDB.push({player: name, game: 'N/A', score: 0, medals: ['Bronze']});
-      saveStorage();
+
+    // Show Modal
+    function showModal(html) {
+      modalContent.innerHTML = html;
+      modalOverlay.classList.add('active');
+      modalOverlay.focus();
     }
-    hideLoginModal();
-    updateUIForPlayer();
-  });
 
-  // Update UI after login
-  function updateUIForPlayer(){
-    // Enable game nav links
-    selectAll('#navMenu a').forEach(link => link.setAttribute('tabindex', '0'));
-    // Show welcome message and games
-    alert(`Welcome, ${currentPlayer.name}! You have Bronze medal.`);
-    scrollToSection('games');
-  }
-
-  // Scroll to section helper
-  function scrollToSection(id){
-    const el = select(`#${id}`);
-    if(el){
-      el.scrollIntoView({behavior:'smooth'});
-      el.focus();
+    // Close Modal
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      modalContent.innerHTML = '';
     }
-  }
-
-  // Show Admin if logged in
-  function updateAdminUI(){
-    if(isAdmin){
-      navAdmin.classList.remove('hidden');
-      navAdmin.setAttribute('aria-hidden', 'false');
-      adminSection.classList.remove('hidden');
-      // Show admin forms
-      select('#caseForm').classList.remove('hidden');
-      select('#memberForm').classList.remove('hidden');
-      select('#adminLoginForm').classList.add('hidden');
-      renderMembers();
-    } else {
-      navAdmin.classList.add('hidden');
-      navAdmin.setAttribute('aria-hidden', 'true');
-      adminSection.classList.add('hidden');
-      select('#caseForm').classList.add('hidden');
-      select('#memberForm').classList.add('hidden');
-      select('#adminLoginForm').classList.remove('hidden');
-    }
-  }
-
-  // Admin login form
-  const adminLoginForm = select('#adminLoginForm');
-  const adminLoginMsg = select('#adminLoginMsg');
-
-  adminLoginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const pw = adminLoginForm.adminPassword.value;
-    if(pw === 'meduadmin123'){ // Simple password, for demo
-      isAdmin = true;
-      saveStorage();
-      updateAdminUI();
-      adminLoginMsg.textContent = 'Admin login successful!';
-      adminLoginMsg.style.color = '#00ffea';
-      adminLoginForm.reset();
-    } else {
-      adminLoginMsg.textContent = 'Incorrect password.';
-      adminLoginMsg.style.color = '#ff6b6b';
-    }
-  });
-
-  // Add case form
-  const caseForm = select('#caseForm');
-  const caseFormMsg = select('#caseFormMsg');
-  caseForm.addEventListener('submit', e => {
-    e.preventDefault();
-    if(!isAdmin) return;
-    const name = caseForm.caseName.value.trim();
-    const desc = caseForm.caseDesc.value.trim();
-    const game = caseForm.caseGame.value;
-    if(!name || !desc || !game){
-      caseFormMsg.textContent = 'Please fill all fields.';
-      caseFormMsg.style.color = '#ff6b6b';
-      return;
-    }
-    // Create unique ID
-    const id = Date.now().toString();
-    casesDB.push({id, name, description: desc, game});
-    saveStorage();
-    caseFormMsg.textContent = `Case "${name}" added to ${game.replace(/-/g,' ')}.`;
-    caseFormMsg.style.color = '#00ffea';
-    caseForm.reset();
-    renderCasesInGames();
-  });
-
-  // Add member form
-  const memberForm = select('#memberForm');
-  const memberFormMsg = select('#memberFormMsg');
-  memberForm.addEventListener('submit', e => {
-    e.preventDefault();
-    if(!isAdmin) return;
-    const name = memberForm.memberName.value.trim();
-    const medal = memberForm.memberMedal.value;
-    if(!name || !medal){
-      memberFormMsg.textContent = 'Please fill all fields.';
-      memberFormMsg.style.color = '#ff6b6b';
-      return;
-    }
-    membersDB.push({name, medal});
-    saveStorage();
-    memberFormMsg.textContent = `Member "${name}" with ${medal} medal added.`;
-    memberFormMsg.style.color = '#00ffea';
-    memberForm.reset();
-    renderMembers();
-  });
-
-  // Render member list
-  const membersList = select('#membersList');
-  function renderMembers(){
-    if(!membersDB.length){
-      membersList.innerHTML = '<li>No members added yet.</li>';
-      return;
-    }
-    membersList.innerHTML = '';
-    membersDB.forEach(m => {
-      const li = document.createElement('li');
-      li.textContent = `${m.name} — ${m.medal} Medal`;
-      membersList.appendChild(li);
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
     });
-  }
 
-  // Render cases in games lists
-  // We will show case names on each game screen
-  function renderCasesInGames(){
-    // Diagnosis Duel
-    const duelArea = select('#duelArea');
-    // Filter cases for diagnosis-duel
-    const duelCases = casesDB.filter(c => c.game === 'diagnosis-duel');
-    if(!duelCases.length){
-      duelArea.innerHTML = '<p>No Diagnosis Duel cases available. Admins can add cases in Admin Tools.</p>';
-    } else {
-      duelArea.innerHTML = '';
-      duelCases.forEach(c => {
-        const btn = document.createElement('button');
-        btn.textContent = c.name;
-        btn.title = c.description;
-        btn.addEventListener('click', () => playDiagnosisDuel(c));
-        duelArea.appendChild(btn);
-      });
+    // Save/load from localStorage
+    function saveToStorage() {
+      localStorage.setItem('medu-users', JSON.stringify(usersDB));
+      localStorage.setItem('medu-cases', JSON.stringify(casesDB));
+      localStorage.setItem('medu-current-user', JSON.stringify(currentUser));
+    }
+    function loadFromStorage() {
+      const users = localStorage.getItem('medu-users');
+      if (users) usersDB = JSON.parse(users);
+      const cases = localStorage.getItem('medu-cases');
+      if (cases) casesDB = JSON.parse(cases);
+      const user = localStorage.getItem('medu-current-user');
+      if (user) currentUser = JSON.parse(user);
     }
 
-    // ER Escape Room
-    const erRoomArea = select('#erRoomArea');
-    const erCases = casesDB.filter(c => c.game === 'er-escape');
-    if(!erCases.length){
-      erRoomArea.innerHTML = '<p>No ER Escape Room cases available.</p>';
-    } else {
-      erRoomArea.innerHTML = '';
-      erCases.forEach(c => {
-        const btn = document.createElement('button');
-        btn.textContent = c.name;
-        btn.title = c.description;
-        btn.addEventListener('click', () => playEREscapeRoom(c));
-        erRoomArea.appendChild(btn);
-      });
+    // Dark mode toggle
+    function toggleDarkMode() {
+      if (document.body.classList.contains('light-mode')) {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('medu-darkmode', 'false');
+      } else {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('medu-darkmode', 'true');
+      }
+    }
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+    // On load check darkmode setting
+    if(localStorage.getItem('medu-darkmode') === 'true'){
+      document.body.classList.add('light-mode');
     }
 
-    // Anatomy Puzzle Match
-    const anatomyPuzzleArea = select('#anatomyPuzzleArea');
-    const anatomyCases = casesDB.filter(c => c.game === 'anatomy-puzzle');
-    if(!anatomyCases.length){
-      anatomyPuzzleArea.innerHTML = '<p>No Anatomy Puzzle Match cases available.</p>';
-    } else {
-      anatomyPuzzleArea.innerHTML = '';
-      anatomyCases.forEach(c => {
-        const btn = document.createElement('button');
-        btn.textContent = c.name;
-        btn.title = c.description;
-        btn.addEventListener('click', () => playAnatomyPuzzle(c));
-        anatomyPuzzleArea.appendChild(btn);
-      });
+    // Sidebar toggle for mobile
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('show');
+    });
+
+    // Navigation click handler
+    function navClickHandler(e) {
+      e.preventDefault();
+      if (!e.target.classList.contains('nav-link')) return;
+      let section = e.target.dataset.section;
+      if (!section) return;
+      if (section === 'admintools' && (!currentUser || currentUser.role !== 'admin')) {
+        alert('Admin Tools are restricted.');
+        return;
+      }
+      currentSection = section;
+      updateNavActive();
+      renderSection(section);
+      if(window.innerWidth < 900) {
+        sidebar.classList.remove('show');
+      }
     }
+    sidebar.addEventListener('click', navClickHandler);
 
-    // Case Creator - not a game to play, just a placeholder
-    const caseCreatorArea = select('#caseCreatorArea');
-    caseCreatorArea.innerHTML = '<p>Create new cases in Admin Tools only.</p>';
-  }
-
-  // === GAME: Diagnosis Duel ===
-  const duelQuitBtn = select('#duelQuitBtn');
-  duelQuitBtn.addEventListener('click', () => quitGame('diagnosis-duel'));
-  function playDiagnosisDuel(caseObj){
-    // Simple interactive multiple choice question
-    const duelArea = select('#duelArea');
-    duelArea.innerHTML = '';
-    duelArea.setAttribute('aria-live', 'polite');
-
-    const question = document.createElement('p');
-    question.textContent = `Case: ${caseObj.name} — Choose the correct diagnosis:`;
-    duelArea.appendChild(question);
-
-    // Hardcoded choices for demo
-    const choices = [
-      {text: 'Pneumonia', correct: caseObj.name.toLowerCase().includes('pneumonia')},
-      {text: 'Heart Attack', correct: caseObj.name.toLowerCase().includes('heart')},
-      {text: 'Migraine', correct: false},
-      {text: 'Stroke', correct: false},
-    ];
-    const buttonsDiv = document.createElement('div');
-    buttonsDiv.style.display = 'flex';
-    buttonsDiv.style.flexWrap = 'wrap';
-    buttonsDiv.style.gap = '0.8rem';
-
-    choices.forEach(c => {
-      const btn = document.createElement('button');
-      btn.textContent = c.text;
-      btn.addEventListener('click', () => {
-        if(c.correct){
-          duelArea.innerHTML = `<p>✅ Correct! You solved "${caseObj.name}".</p>`;
-          recordCompletion(currentPlayer.name, 'diagnosis-duel', 10);
+    // Update nav active state
+    function updateNavActive() {
+      $all('.nav-link').forEach(link => {
+        if (link.dataset.section === currentSection) {
+          link.classList.add('active');
         } else {
-          duelArea.innerHTML = `<p>❌ Incorrect diagnosis. Try another case or try again.</p>`;
+          link.classList.remove('active');
         }
       });
-      buttonsDiv.appendChild(btn);
-    });
-    duelArea.appendChild(buttonsDiv);
-    showGameSection('diagnosis-duel');
-  }
+    }
 
-  // === GAME: ER Escape Room ===
-  const erQuitBtn = select('#erQuitBtn');
-  erQuitBtn.addEventListener('click', () => quitGame('er-escape'));
-  function playEREscapeRoom(caseObj){
-    const erRoomArea = select('#erRoomArea');
-    erRoomArea.innerHTML = `<p>You entered the emergency room scenario: ${caseObj.name}.</p>`;
+    // Format date/time nicely
+    function formatDateTime(timestamp) {
+      const d = new Date(timestamp);
+      return d.toLocaleString();
+    }
 
-    const btn1 = document.createElement('button');
-    btn1.textContent = 'Check Patient Vitals';
-    btn1.addEventListener('click', () => {
-      erRoomArea.innerHTML = `<p>Vitals checked: Blood pressure elevated, pulse rapid. Suspect cardiac event.</p><button id="erAction2">Administer oxygen</button>`;
-      select('#erAction2').addEventListener('click', () => {
-        erRoomArea.innerHTML = `<p>Oxygen administered. Patient stabilized.</p><button id="erFinish">Finish Scenario</button>`;
-        select('#erFinish').addEventListener('click', () => {
-          erRoomArea.innerHTML = `<p>✅ Scenario "${caseObj.name}" completed successfully.</p>`;
-          recordCompletion(currentPlayer.name, 'er-escape', 12);
+    // Get medal icon with glow class
+    function getMedalIcon(type) {
+      switch(type) {
+        case 'bronze': return '<span class="medal-bronze" title="Bronze Medal">🥉</span>';
+        case 'silver': return '<span class="medal-silver" title="Silver Medal">🥈</span>';
+        case 'gold': return '<span class="medal-gold" title="Gold Medal">🥇</span>';
+        default: return '';
+      }
+    }
+
+    // Calculate user rank based on medals
+    function calculateRank(user) {
+      let totalMedals = (user.medals.bronze||0) + (user.medals.silver||0)*2 + (user.medals.gold||0)*3;
+      if(totalMedals >= 15) return 'Platinum Medic';
+      if(totalMedals >= 8) return 'Gold Medic';
+      if(totalMedals >= 3) return 'Silver Medic';
+      return 'Bronze Medic';
+    }
+
+    // Render login screen
+    function renderLogin() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Welcome to MEDU Case Vault</h2>
+          <div class="card" style="max-width:400px; margin: 2rem auto;">
+            <form id="loginForm">
+              <label for="username">Username</label>
+              <input type="text" id="username" placeholder="Enter username" required autocomplete="off"/>
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="Enter password" required autocomplete="off"/>
+              <button type="submit">Login</button>
+              <p style="margin-top:1rem; font-size: 0.9rem; color: var(--accent-blue-light);">
+                Not registered? <a href="#" id="showRegister">Register here</a>
+              </p>
+            </form>
+          </div>
+        </section>
+      `;
+
+      $('#showRegister').addEventListener('click', (e) => {
+        e.preventDefault();
+        renderRegister();
+      });
+
+      $('#loginForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const username = $('#username').value.trim();
+        const password = $('#password').value.trim();
+        if(!username || !password){
+          alert('Please fill both username and password.');
+          return;
+        }
+        if(usersDB[username] && usersDB[username].password === password) {
+          currentUser = {...usersDB[username]};
+          currentUser.username = username;
+          alert(`Welcome back, ${username}!`);
+          postLoginSetup();
+        } else {
+          alert('Invalid credentials.');
+        }
+      });
+    }
+
+    // Render registration form
+    function renderRegister() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Register New Account</h2>
+          <div class="card" style="max-width:400px; margin: 2rem auto;">
+            <form id="registerForm">
+              <label for="regUsername">Username</label>
+              <input type="text" id="regUsername" placeholder="Choose username" required autocomplete="off" />
+              <label for="regPassword">Password</label>
+              <input type="password" id="regPassword" placeholder="Choose password" required autocomplete="off" />
+              <label for="regConfirm">Confirm Password</label>
+              <input type="password" id="regConfirm" placeholder="Confirm password" required autocomplete="off" />
+              <button type="submit">Register</button>
+              <p style="margin-top:1rem; font-size: 0.9rem; color: var(--accent-blue-light);">
+                Already have an account? <a href="#" id="showLogin">Login here</a>
+              </p>
+            </form>
+          </div>
+        </section>
+      `;
+
+      $('#showLogin').addEventListener('click', (e) => {
+        e.preventDefault();
+        renderLogin();
+      });
+
+      $('#registerForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const username = $('#regUsername').value.trim();
+        const password = $('#regPassword').value.trim();
+        const confirm = $('#regConfirm').value.trim();
+        if(!username || !password || !confirm){
+          alert('Fill all fields.');
+          return;
+        }
+        if(password !== confirm){
+          alert('Passwords do not match.');
+          return;
+        }
+        if(usersDB[username]){
+          alert('Username already taken.');
+          return;
+        }
+        usersDB[username] = {
+          username,
+          password,
+          role: 'player',
+          medals: {bronze:0, silver:0, gold:0},
+          rank: 'Bronze Medic',
+          completedCases: []
+        };
+        alert('Registration successful! Please login.');
+        saveToStorage();
+        renderLogin();
+      });
+    }
+
+    // Post-login setup: show nav, content, admin link if admin
+    function postLoginSetup() {
+      saveToStorage();
+      // Show admin link if user is admin
+      if(currentUser.role === 'admin'){
+        adminToolsLink.style.display = 'block';
+      } else {
+        adminToolsLink.style.display = 'none';
+      }
+      renderSection('home');
+      updateNavActive();
+    }
+
+    // Render Home Section
+    function renderHome() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Welcome to the MEDU Case Vault</h2>
+          <p>The ultimate medical roleplay and clinical learning simulation platform under SWM | Medical Education Department.</p>
+          <div class="card">
+            <h3>Quick Actions</h3>
+            <button id="btnEnterVault">Enter Vault</button>
+            <button id="btnLogout" style="background: var(--danger); margin-left:1rem;">Logout</button>
+          </div>
+          <div class="callout">
+            🔎 <strong>Tip:</strong> Use the navigation to explore games, shadow cases, anatomy explorer, and more!
+          </div>
+        </section>
+      `;
+
+      $('#btnEnterVault').addEventListener('click', () => {
+        renderSection('games');
+        updateNavActive();
+      });
+
+      $('#btnLogout').addEventListener('click', () => {
+        if(confirm('Are you sure you want to logout?')){
+          currentUser = null;
+          saveToStorage();
+          adminToolsLink.style.display = 'none';
+          renderLogin();
+        }
+      });
+    }
+
+    // Render Games Section (All games descriptions + Start buttons)
+    function renderGames() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Games</h2>
+          <p>Select a game to start playing medical cases and challenges.</p>
+
+          <div class="card" data-game="diagnosis-duel">
+            <h3>🧠 Diagnosis Duel (1v1 Competitive)</h3>
+            <p>Compete with another player to diagnose the same case fastest and most accurately. Rankings from Bronze to Platinum Medic.</p>
+            <button class="start-game-btn" data-game="diagnosis-duel">Start Diagnosis Duel</button>
+          </div>
+
+          <div class="card" data-game="er-escape">
+            <h3>🚨 ER Escape Room</h3>
+            <p>Virtual emergency room scenarios where you must solve cases to escape. High pressure, high stakes.</p>
+            <button class="start-game-btn" data-game="er-escape">Start ER Escape Room</button>
+          </div>
+
+          <div class="card" data-game="anatomy-match">
+            <h3>🧪 Anatomy Puzzle Match</h3>
+            <p>Match organs and functions to solve anatomy puzzles and unlock medical knowledge badges.</p>
+            <button class="start-game-btn" data-game="anatomy-match">Start Anatomy Puzzle Match</button>
+          </div>
+
+          <div class="card" data-game="case-creator">
+            <h3>📄 Case Creator Game</h3>
+            <p>Create custom medical cases and challenge others to solve your puzzles.</p>
+            <button class="start-game-btn" data-game="case-creator">Start Case Creator Game</button>
+          </div>
+        </section>
+      `;
+
+      $all('.start-game-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const game = btn.dataset.game;
+          startGame(game);
         });
       });
-    });
+    }
 
-    erRoomArea.appendChild(btn1);
-    showGameSection('er-escape');
-  }
+    // Start a game (Placeholder logic)
+    function startGame(game) {
+      switch(game){
+        case 'diagnosis-duel':
+          renderDiagnosisDuel();
+          break;
+        case 'er-escape':
+          renderEREscapeRoom();
+          break;
+        case 'anatomy-match':
+          renderAnatomyPuzzleMatch();
+          break;
+        case 'case-creator':
+          if(currentUser.role === 'admin'){
+            renderCaseCreator();
+          } else {
+            alert('Case Creator is restricted to Admins only.');
+            renderGames();
+          }
+          break;
+        default:
+          alert('Game not implemented yet.');
+          renderGames();
+      }
+    }
 
-  // === GAME: Anatomy Puzzle Match ===
-  const anatomyQuitBtn = select('#anatomyQuitBtn');
-  anatomyQuitBtn.addEventListener('click', () => quitGame('anatomy-puzzle'));
-
-  function playAnatomyPuzzle(caseObj){
-    const area = select('#anatomyPuzzleArea');
-    area.innerHTML = '';
-    // For demo, simple matching game of organ names to their location
-    const organs = ['Heart', 'Lungs', 'Liver'];
-    const locations = ['Chest center', 'Chest sides', 'Upper right abdomen'];
-
-    // Shuffle locations for challenge
-    function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-    const shuffledLocs = shuffle([...locations]);
-
-    const prompt = document.createElement('p');
-    prompt.textContent = `Match the organ to the correct location:`;
-    area.appendChild(prompt);
-
-    organs.forEach(org => {
-      const selectElem = document.createElement('select');
-      organsSelect = ['Select location', ...shuffledLocs];
-      organsSelect.forEach(loc => {
-        const opt = document.createElement('option');
-        opt.textContent = loc;
-        opt.value = loc;
-        selectElem.appendChild(opt);
+    // Placeholder: Diagnosis Duel
+    function renderDiagnosisDuel() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">🧠 Diagnosis Duel</h2>
+          <p>This is a simulated competitive diagnosis game.</p>
+          <p><em>(Placeholder for 1v1 competitive logic, matchmaking, timer, and case solving.)</em></p>
+          <button id="backToGames">Back to Games</button>
+        </section>
+      `;
+      $('#backToGames').addEventListener('click', () => {
+        renderGames();
       });
-      const label = document.createElement('label');
-      label.textContent = org;
-      label.style.display = 'block';
-      label.appendChild(selectElem);
-      area.appendChild(label);
-    });
+    }
 
-    const submitBtn = document.createElement('button');
-    submitBtn.textContent = 'Submit Answers';
-    submitBtn.addEventListener('click', () => {
-      const selects = area.querySelectorAll('select');
-      let correctCount = 0;
-      selects.forEach((sel, idx) => {
-        if(
-          (organs[idx] === 'Heart' && sel.value === 'Chest center') ||
-          (organs[idx] === 'Lungs' && sel.value === 'Chest sides') ||
-          (organs[idx] === 'Liver' && sel.value === 'Upper right abdomen')
-        ){
-          correctCount++;
+    // Placeholder: ER Escape Room
+    function renderEREscapeRoom() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">🚨 ER Escape Room</h2>
+          <p>Navigate through an emergency room and solve cases to escape.</p>
+          <p><em>(Placeholder for ER escape room simulation.)</em></p>
+          <button id="backToGames">Back to Games</button>
+        </section>
+      `;
+      $('#backToGames').addEventListener('click', () => {
+        renderGames();
+      });
+    }
+
+    // Placeholder: Anatomy Puzzle Match
+    function renderAnatomyPuzzleMatch() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">🧪 Anatomy Puzzle Match</h2>
+          <p>Match organs with their functions in an engaging puzzle.</p>
+          <p><em>(Placeholder for anatomy puzzle match.)</em></p>
+          <button id="backToGames">Back to Games</button>
+        </section>
+      `;
+      $('#backToGames').addEventListener('click', () => {
+        renderGames();
+      });
+    }
+
+    // Admin-only: Case Creator Game
+    function renderCaseCreator() {
+      let caseOptions = '';
+      Object.values(casesDB).forEach(c => {
+        caseOptions += `<option value="${c.id}">${c.title} [${c.status}]</option>`;
+      });
+
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">📄 Case Creator (Admin)</h2>
+          <form id="caseCreatorForm" class="card" style="max-width:600px;">
+            <label for="caseTitle">Case Title</label>
+            <input type="text" id="caseTitle" placeholder="Enter case title" required />
+            
+            <label for="caseDescription">Description</label>
+            <textarea id="caseDescription" rows="4" placeholder="Enter case description" required></textarea>
+
+            <label for="caseGame">Game</label>
+            <select id="caseGame" required>
+              <option value="" disabled selected>Select game</option>
+              <option value="Diagnosis Duel">Diagnosis Duel</option>
+              <option value="ER Escape Room">ER Escape Room</option>
+              <option value="Anatomy Puzzle Match">Anatomy Puzzle Match</option>
+              <option value="Case Creator Game">Case Creator Game</option>
+            </select>
+
+            <label for="caseDifficulty">Difficulty</label>
+            <select id="caseDifficulty" required>
+              <option value="" disabled selected>Select difficulty</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+
+            <button type="submit">Create / Update Case</button>
+          </form>
+
+          <div class="card" style="margin-top:2rem;">
+            <h3>Existing Cases</h3>
+            <select id="selectExistingCase">
+              <option value="" selected disabled>Select a case to edit</option>
+              ${caseOptions}
+            </select>
+            <button id="deleteCaseBtn" style="background: var(--danger); margin-top:1rem;">Delete Selected Case</button>
+          </div>
+
+          <button id="backToGames" style="margin-top: 2rem;">Back to Games</button>
+        </section>
+      `;
+
+      $('#caseCreatorForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const title = $('#caseTitle').value.trim();
+        const description = $('#caseDescription').value.trim();
+        const game = $('#caseGame').value;
+        const difficulty = $('#caseDifficulty').value;
+        if(!title || !description || !game || !difficulty){
+          alert('Fill all fields.');
+          return;
+        }
+        // Check if editing existing
+        const selectedCaseId = $('#selectExistingCase').value;
+        if(selectedCaseId) {
+          casesDB[selectedCaseId].title = title;
+          casesDB[selectedCaseId].description = description;
+          casesDB[selectedCaseId].game = game;
+          casesDB[selectedCaseId].difficulty = difficulty;
+          alert('Case updated.');
+        } else {
+          // New case id
+          const newId = `case${Date.now()}`;
+          casesDB[newId] = {
+            id: newId,
+            title,
+            description,
+            game,
+            status: 'open',
+            createdBy: currentUser.username,
+            difficulty,
+          };
+          alert('Case created.');
+          // Refresh select options
+          renderCaseCreator();
+          return;
+        }
+        saveToStorage();
+      });
+
+      $('#selectExistingCase').addEventListener('change', e => {
+        const caseId = e.target.value;
+        if(!caseId) return;
+        const selectedCase = casesDB[caseId];
+        if(selectedCase){
+          $('#caseTitle').value = selectedCase.title;
+          $('#caseDescription').value = selectedCase.description;
+          $('#caseGame').value = selectedCase.game;
+          $('#caseDifficulty').value = selectedCase.difficulty;
         }
       });
-      if(correctCount === organs.length){
-        area.innerHTML = `<p>✅ All correct! You completed the Anatomy Puzzle: ${caseObj.name}</p>`;
-        recordCompletion(currentPlayer.name, 'anatomy-puzzle', 15);
-      } else {
-        area.innerHTML += `<p>❌ Some answers are incorrect, please try again.</p>`;
-      }
-    });
-    area.appendChild(submitBtn);
 
-    showGameSection('anatomy-puzzle');
-  }
+      $('#deleteCaseBtn').addEventListener('click', () => {
+        const selectedCaseId = $('#selectExistingCase').value;
+        if(!selectedCaseId){
+          alert('Select a case to delete.');
+          return;
+        }
+        if(confirm('Are you sure you want to delete this case? This action cannot be undone.')){
+          delete casesDB[selectedCaseId];
+          alert('Case deleted.');
+          saveToStorage();
+          renderCaseCreator();
+        }
+      });
 
-  // === CASE CREATOR ===
-  const caseCreatorQuitBtn = select('#caseCreatorQuitBtn');
-  caseCreatorQuitBtn.addEventListener('click', () => quitGame('case-creator'));
-  function playCaseCreator(){
-    // Inform users cases can only be created by Admin in tools
-    const area = select('#caseCreatorArea');
-    area.innerHTML = `<p>Case creation is only available via Admin Tools.</p>`;
-    showGameSection('case-creator');
-  }
-
-  // === SHOW/HIDE GAME SECTIONS ===
-  function showGameSection(id){
-    selectAll('.game-section').forEach(section => {
-      if(section.id === id) section.classList.add('active');
-      else section.classList.remove('active');
-    });
-    scrollToSection(id);
-  }
-
-  function quitGame(id){
-    select(`#${id}`).classList.remove('active');
-    scrollToSection('games');
-  }
-
-  // === LEADERBOARD ===
-  const leaderboardBody = select('#leaderboardBody');
-  function renderLeaderboard(){
-    if(!leaderboardDB.length){
-      leaderboardBody.innerHTML = '<tr><td colspan="5">No leaderboard data available.</td></tr>';
-      return;
+      $('#backToGames').addEventListener('click', () => {
+        renderGames();
+      });
     }
-    // Sort descending by score
-    leaderboardDB.sort((a,b) => b.score - a.score);
-    leaderboardBody.innerHTML = '';
-    leaderboardDB.forEach((p, idx) => {
-      const tr = document.createElement('tr');
-      let rankClass = '';
-      if(p.medals.includes('Gold')) rankClass = 'rank-gold';
-      else if(p.medals.includes('Silver')) rankClass = 'rank-silver';
-      else if(p.medals.includes('Bronze')) rankClass = 'rank-bronze';
 
-      tr.innerHTML = `
-        <td class="${rankClass}">${idx+1}</td>
-        <td>${p.player}</td>
-        <td>${p.game}</td>
-        <td>${p.score}</td>
-        <td>${p.medals.join(', ')}</td>
+    // Shadow Cases Section
+    function renderShadowCases() {
+      const shadowCases = Object.values(casesDB).filter(c => c.status === 'open');
+      let listHTML = '';
+      if(shadowCases.length === 0) listHTML = '<p>No active shadow cases at the moment.</p>';
+      else {
+        shadowCases.forEach(c => {
+          listHTML += `
+            <div class="card">
+              <h3>${c.title} <small style="color:#ccc; font-size:0.9rem;">[${c.difficulty}]</small></h3>
+              <p>${c.description}</p>
+              <p><strong>Game:</strong> ${c.game}</p>
+              <button class="start-case-btn" data-caseid="${c.id}">Start Case</button>
+            </div>
+          `;
+        });
+      }
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Shadow Cases</h2>
+          ${listHTML}
+          <button id="backToGames" style="margin-top: 1rem;">Back to Games</button>
+        </section>
       `;
-      leaderboardBody.appendChild(tr);
-    });
-  }
 
-  // === RECORD COMPLETION ===
-  // Increase score and maybe upgrade medal
-  function recordCompletion(playerName, game, points){
-    if(!playerName) return;
-    let player = leaderboardDB.find(p => p.player === playerName && p.game === game);
-    if(!player){
-      player = {player: playerName, game, score: 0, medals: ['Bronze']};
-      leaderboardDB.push(player);
+      $all('.start-case-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const caseId = btn.dataset.caseid;
+          if(caseId) {
+            startCase(caseId);
+          }
+        });
+      });
+      $('#backToGames').addEventListener('click', () => {
+        renderGames();
+      });
     }
-    player.score += points;
 
-    // Upgrade medals based on score
-    if(player.score >= 100 && !player.medals.includes('Gold')){
-      player.medals = ['Gold'];
-      alert(`${playerName} earned Gold Medal for ${game}! 🏅`);
-    } else if(player.score >= 50 && !player.medals.includes('Silver')){
-      player.medals = ['Silver'];
-      alert(`${playerName} earned Silver Medal for ${game}! 🥈`);
-    }
-    saveStorage();
-    renderLeaderboard();
-  }
-
-  // === ANATOMY EXPLORER MODAL ===
-  const detailModal = select('#detailModal');
-  const detailModalContent = select('#detailModalContent');
-  const detailModalTitle = select('#detailModalTitle');
-  const detailCloseBtn = detailModal.querySelector('.close-modal');
-
-  detailCloseBtn.addEventListener('click', () => {
-    detailModal.classList.remove('active');
-  });
-  detailModal.addEventListener('click', e => {
-    if(e.target === detailModal) detailModal.classList.remove('active');
-  });
-
-  // Organ info map
-  const organInfo = {
-    heart: {
-      title: 'Heart',
-      description: 'The heart pumps blood throughout the body. It is a vital organ in the circulatory system.',
-      cases: ['Heart Attack Simulation', 'Cardiac Arrest Emergency']
-    },
-    lungs: {
-      title: 'Lungs',
-      description: 'The lungs are responsible for gas exchange, providing oxygen and removing carbon dioxide.',
-      cases: ['Pneumonia Case', 'Asthma Emergency']
-    },
-    liver: {
-      title: 'Liver',
-      description: 'The liver processes nutrients and detoxifies harmful substances in the body.',
-      cases: ['Liver Failure Case', 'Hepatitis Infection']
-    }
-  };
-
-  // Organ click event
-  selectAll('.organ').forEach(org => {
-    org.addEventListener('click', () => {
-      const id = org.id;
-      if(organInfo[id]){
-        detailModalTitle.textContent = organInfo[id].title;
-        detailModalContent.innerHTML = `<p>${organInfo[id].description}</p><p><strong>Related Cases:</strong> ${organInfo[id].cases.join(', ')}</p>`;
-        detailModal.classList.add('active');
-        detailModal.focus();
+    // Start a specific case
+    function startCase(caseId) {
+      const c = casesDB[caseId];
+      if(!c){
+        alert('Case not found.');
+        renderShadowCases();
+        return;
       }
-    });
-  });
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Case: ${c.title}</h2>
+          <p><strong>Game:</strong> ${c.game}</p>
+          <p>${c.description}</p>
+          <button id="btnSolveCase">Solve Case</button>
+          <button id="btnBackCases" style="margin-left:1rem;">Back to Cases</button>
+        </section>
+      `;
 
-  // EVIDENCE SCANNER
-  const scannerBox = select('#scannerBox');
-  const fileInput = select('#fileInput');
-  const scanResult = select('#scanResult');
+      $('#btnSolveCase').addEventListener('click', () => {
+        // Simulate solving with a simple success
+        alert('Congratulations! You solved the case.');
+        // Update user progress
+        if(!currentUser.completedCases.includes(caseId)){
+          currentUser.completedCases.push(caseId);
+          // Award medal based on difficulty
+          switch(c.difficulty) {
+            case 'easy': currentUser.medals.bronze++; break;
+            case 'medium': currentUser.medals.silver++; break;
+            case 'hard': currentUser.medals.gold++; break;
+          }
+          currentUser.rank = calculateRank(currentUser);
+          usersDB[currentUser.username] = {...currentUser};
+          saveToStorage();
+        }
+        renderShadowCases();
+      });
 
-  scannerBox.addEventListener('click', () => {
-    fileInput.click();
-  });
-
-  scannerBox.addEventListener('dragover', e => {
-    e.preventDefault();
-    scannerBox.classList.add('dragover');
-  });
-
-  scannerBox.addEventListener('dragleave', e => {
-    e.preventDefault();
-    scannerBox.classList.remove('dragover');
-  });
-
-  scannerBox.addEventListener('drop', e => {
-    e.preventDefault();
-    scannerBox.classList.remove('dragover');
-    const files = e.dataTransfer.files;
-    processFiles(files);
-  });
-
-  fileInput.addEventListener('change', e => {
-    const files = e.target.files;
-    processFiles(files);
-  });
-
-  function processFiles(files){
-    if(files.length === 0){
-      scanResult.textContent = 'No files uploaded.';
-      return;
-    }
-    scanResult.textContent = `Scanning ${files.length} file(s)...`;
-    setTimeout(() => {
-      scanResult.textContent = `Scan complete. Found no anomalies in uploaded files.`;
-    }, 1500);
-  }
-
-  // Case Report Generator form
-  const reportForm = select('#reportForm');
-  const reportArea = select('#reportArea');
-
-  reportForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const patientName = reportForm.patientName.value.trim();
-    const caseSummary = reportForm.caseSummary.value.trim();
-    const diagnosis = reportForm.diagnosis.value.trim();
-    const recommendations = reportForm.recommendations.value.trim();
-
-    if(!patientName || !caseSummary || !diagnosis){
-      reportArea.textContent = 'Please fill in all required fields.';
-      return;
+      $('#btnBackCases').addEventListener('click', () => {
+        renderShadowCases();
+      });
     }
 
-    const reportHTML = `
-      <h3>Case Report</h3>
-      <p><strong>Patient:</strong> ${patientName}</p>
-      <p><strong>Summary:</strong> ${caseSummary}</p>
-      <p><strong>Diagnosis:</strong> ${diagnosis}</p>
-      <p><strong>Recommendations:</strong> ${recommendations || 'None'}</p>
-    `;
+    // Anatomy Explorer Section
+    function renderAnatomyExplorer() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Anatomy Explorer</h2>
+          <p>Explore detailed anatomical diagrams and test your knowledge.</p>
+          <p><em>(Placeholder for interactive anatomy explorer with puzzles and quizzes.)</em></p>
+          <button id="backToGames">Back to Games</button>
+        </section>
+      `;
+      $('#backToGames').addEventListener('click', () => {
+        renderGames();
+      });
+    }
 
-    reportArea.innerHTML = reportHTML;
-  });
+    // Leaderboard Section
+    function renderLeaderboard() {
+      // Build sorted leaderboard
+      const sortedUsers = Object.values(usersDB).sort((a,b) => {
+        const aScore = (a.medals.gold||0)*3 + (a.medals.silver||0)*2 + (a.medals.bronze||0);
+        const bScore = (b.medals.gold||0)*3 + (b.medals.silver||0)*2 + (b.medals.bronze||0);
+        return bScore - aScore;
+      });
 
-  // INITIAL LOAD
-  loadStorage();
-  updateAdminUI();
-  renderCasesInGames();
-  renderLeaderboard();
-  if(currentPlayer) updateUIForPlayer();
-})();
+      let tableRows = '';
+      sortedUsers.forEach((u,i) => {
+        tableRows += `
+          <tr>
+            <td>${i+1}</td>
+            <td>${u.username}</td>
+            <td>${getMedalIcon('gold')} ${u.medals.gold || 0}</td>
+            <td>${getMedalIcon('silver')} ${u.medals.silver || 0}</td>
+            <td>${getMedalIcon('bronze')} ${u.medals.bronze || 0}</td>
+            <td>${u.rank || 'Bronze Medic'}</td>
+          </tr>
+        `;
+      });
+
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Leaderboard</h2>
+          <table class="leaderboard">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Gold Medals</th>
+                <th>Silver Medals</th>
+                <th>Bronze Medals</th>
+                <th>Rank</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tableRows}
+            </tbody>
+          </table>
+          <button id="backToHome" style="margin-top: 1rem;">Back to Home</button>
+        </section>
+      `;
+
+      $('#backToHome').addEventListener('click', () => {
+        renderHome();
+      });
+    }
+
+    // Archives Section
+    function renderArchives() {
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Archives</h2>
+          <p>Archived cases and past events will be displayed here.</p>
+          <p><em>(Placeholder for archive records.)</em></p>
+          <button id="backToHome" style="margin-top: 1rem;">Back to Home</button>
+        </section>
+      `;
+      $('#backToHome').addEventListener('click', () => {
+        renderHome();
+      });
+    }
+
+    // Admin Tools Section (Only visible if admin)
+    function renderAdminTools() {
+      // List users with management tools
+      let userListHTML = '';
+      Object.values(usersDB).forEach(u => {
+        userListHTML += `
+          <div class="card" style="margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong>${u.username}</strong> (${u.role})
+              <br/>
+              Medals: ${getMedalIcon('gold')} ${u.medals.gold || 0} | ${getMedalIcon('silver')} ${u.medals.silver || 0} | ${getMedalIcon('bronze')} ${u.medals.bronze || 0}
+              <br/>
+              Rank: ${u.rank || 'Bronze Medic'}
+            </div>
+            <div>
+              <button class="btn-promote" data-user="${u.username}" title="Promote Medal">🏅 Promote</button>
+              <button class="btn-demote" data-user="${u.username}" title="Demote Medal">🔻 Demote</button>
+              <button class="btn-delete-user" data-user="${u.username}" title="Delete User" style="background: var(--danger);">❌</button>
+            </div>
+          </div>
+        `;
+      });
+
+      mainContent.innerHTML = `
+        <section class="fade-in">
+          <h2 class="section-title">Admin Tools</h2>
+          <h3>User Management</h3>
+          ${userListHTML}
+          <button id="addUserBtn" style="margin-top: 1rem;">Add New User</button>
+          <button id="backToHome" style="margin-top: 2rem;">Back to Home</button>
+        </section>
+      `;
+
+      $all('.btn-promote').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const username = btn.dataset.user;
+          promoteUser(username);
+        });
+      });
+      $all('.btn-demote').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const username = btn.dataset.user;
+          demoteUser(username);
+        });
+      });
+      $all('.btn-delete-user').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const username = btn.dataset.user;
+          if(username === currentUser.username) {
+            alert('You cannot delete yourself.');
+            return;
+          }
+          if(confirm(`Are you sure you want to delete user '${username}'?`)){
+            delete usersDB[username];
+            saveToStorage();
+            renderAdminTools();
+          }
+        });
+      });
+
+      $('#addUserBtn').addEventListener('click', () => {
+        promptAddUser();
+      });
+      $('#backToHome').addEventListener('click', () => {
+        renderHome();
+      });
+    }
+
+    // Admin: Promote user medals
+    function promoteUser(username) {
+      const user = usersDB[username];
+      if(!user){
+        alert('User not found.');
+        return;
+      }
+      // Promote from bronze -> silver -> gold (max)
+      if(user.medals.bronze < 10){
+        user.medals.bronze++;
+      } else if(user.medals.silver < 10){
+        user.medals.silver++;
+      } else if(user.medals.gold < 10){
+        user.medals.gold++;
+      } else {
+        alert('User already has maximum medals.');
+        return;
+      }
+      user.rank = calculateRank(user);
+      usersDB[username] = user;
+      saveToStorage();
+      alert(`${username} promoted!`);
+      renderAdminTools();
+    }
+
+    // Admin: Demote user medals
+    function demoteUser(username) {
+      const user = usersDB[username];
+      if(!user){
+        alert('User not found.');
+        return;
+      }
+      // Demote in reverse: gold -> silver -> bronze
+      if(user.medals.gold > 0){
+        user.medals.gold--;
+      } else if(user.medals.silver > 0){
+        user.medals.silver--;
+      } else if(user.medals.bronze > 0){
+        user.medals.bronze--;
+      } else {
+        alert('User has no medals to demote.');
+        return;
+      }
+      user.rank = calculateRank(user);
+      usersDB[username] = user;
+      saveToStorage();
+      alert(`${username} demoted.`);
+      renderAdminTools();
+    }
+
+    // Admin: Prompt add user modal
+    function promptAddUser() {
+      showModal(`
+        <h3>Add New User</h3>
+        <form id="addUserForm">
+          <label for="newUsername">Username</label>
+          <input type="text" id="newUsername" required />
+          <label for="newPassword">Password</label>
+          <input type="password" id="newPassword" required />
+          <label for="newRole">Role</label>
+          <select id="newRole" required>
+            <option value="player" selected>Player</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button type="submit">Add User</button>
+          <button type="button" id="cancelAddUser">Cancel</button>
+        </form>
+      `);
+
+      $('#addUserForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const username = $('#newUsername').value.trim();
+        const password = $('#newPassword').value.trim();
+        const role = $('#newRole').value;
+        if(!username || !password) {
+          alert('Fill all fields.');
+          return;
+        }
+        if(usersDB[username]){
+          alert('Username already exists.');
+          return;
+        }
+        usersDB[username] = {
+          username,
+          password,
+          role,
+          medals: {bronze:0, silver:0, gold:0},
+          rank: 'Bronze Medic',
+          completedCases: []
+        };
+        saveToStorage();
+        alert('User added.');
+        closeModal();
+        renderAdminTools();
+      });
+
+      $('#cancelAddUser').addEventListener('click', () => {
+        closeModal();
+      });
+    }
+
+    // Initial load
+    loadFromStorage();
+
+    if(currentUser){
+      postLoginSetup();
+    } else {
+      renderLogin();
+    }
+  })();
 </script>
 
 </body>
